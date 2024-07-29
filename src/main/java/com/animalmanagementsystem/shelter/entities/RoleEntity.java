@@ -18,4 +18,37 @@ public class RoleEntity extends BaseEntity {
 
     @ManyToOne
     UserRoleEntity user;
+
+    public RoleEntity() {
+    }
+
+    public RoleEntity(String name, String description, UserRoleEntity user) {
+        this.name = name;
+        this.description = description;
+        this.user = user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public UserRoleEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserRoleEntity user) {
+        this.user = user;
+    }
 }
