@@ -21,7 +21,6 @@ public class AnimalEntity extends BaseEntity {
     @OneToOne(mappedBy = "animal")
     CageEntity cage;
 
-
     @OneToMany(mappedBy = "status")
     List<HealthEntity> health;
 }
