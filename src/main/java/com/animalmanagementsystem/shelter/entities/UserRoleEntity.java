@@ -17,7 +17,6 @@ public class UserRoleEntity extends BaseEntity {
     @OneToMany(mappedBy = "name")
     private List<RoleEntity> roles;
 
-
     public UserRoleEntity() {
     }
 
