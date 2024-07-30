@@ -17,4 +17,28 @@ public class UserRoleEntity extends BaseEntity {
     @OneToMany(mappedBy = "name")
     private List<RoleEntity> roles;
 
+
+    public UserRoleEntity() {
+    }
+
+    public UserRoleEntity(List<UserEntity> users, List<RoleEntity> roles) {
+        this.users = users;
+        this.roles = roles;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
+
+    public List<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
+    }
 }
