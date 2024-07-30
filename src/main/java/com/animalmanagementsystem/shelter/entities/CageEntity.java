@@ -1,7 +1,12 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_cage")
@@ -13,17 +18,16 @@ public class CageEntity extends BaseEntity {
     @Column(name = "availability")
     private String availability;
 
-    @OneToOne
-    @JoinColumn(name = "animal_id")
-    AnimalEntity animal;
+    @OneToMany(mappedBy = "cage")
+    List<AnimalEntity> animals;
 
     public CageEntity() {
     }
 
-    public CageEntity(String cageNumber, String availability, AnimalEntity animal) {
+    public CageEntity(String cageNumber, String availability, List<AnimalEntity> animals) {
         this.cageNumber = cageNumber;
         this.availability = availability;
-        this.animal = animal;
+        this.animals = animals;
     }
 
     public String getCageNumber() {
@@ -42,11 +46,11 @@ public class CageEntity extends BaseEntity {
         this.availability = availability;
     }
 
-    public AnimalEntity getAnimal() {
-        return animal;
+    public List<AnimalEntity> getAnimals() {
+        return animals;
     }
 
-    public void setAnimal(AnimalEntity animal) {
-        this.animal = animal;
+    public void setAnimals(List<AnimalEntity> animals) {
+        this.animals = animals;
     }
 }
