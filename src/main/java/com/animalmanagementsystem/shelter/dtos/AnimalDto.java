@@ -7,15 +7,17 @@ public class AnimalDto extends BaseDto {
     private String species;
     private Integer age;
     CageDto cage;
+    UserAnimalDto animal;
 
     public AnimalDto() {
     }
 
-    public AnimalDto(String name, String species, Integer age, CageDto cage) {
+    public AnimalDto(String name, String species, Integer age, CageDto cage, UserAnimalDto animal) {
         this.name = name;
         this.species = species;
         this.age = age;
         this.cage = cage;
+        this.animal = animal;
     }
 
     public String getName() {
@@ -48,5 +50,13 @@ public class AnimalDto extends BaseDto {
 
     public void setCage(CageDto cage) {
         this.cage = cage;
+    }
+
+    public UserAnimalDto getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(UserAnimalDto animal) {
+        this.animal = animal;
     }
 }

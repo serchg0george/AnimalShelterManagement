@@ -28,17 +28,21 @@ public class UserEntity extends BaseEntity {
     @ManyToOne
     UserRoleEntity role;
 
+    @ManyToOne
+    UserAnimalEntity animal;
+
     public UserEntity() {
     }
 
-    public UserEntity(String email, String password, String firstName,
-                      String lastName, String phoneNumber, UserRoleEntity role) {
+    public UserEntity(String email, String password, String firstName, String lastName,
+                      String phoneNumber, UserRoleEntity role, UserAnimalEntity animal) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.animal = animal;
     }
 
     public String getEmail() {
@@ -87,5 +91,13 @@ public class UserEntity extends BaseEntity {
 
     public void setRole(UserRoleEntity role) {
         this.role = role;
+    }
+
+    public UserAnimalEntity getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(UserAnimalEntity animal) {
+        this.animal = animal;
     }
 }
