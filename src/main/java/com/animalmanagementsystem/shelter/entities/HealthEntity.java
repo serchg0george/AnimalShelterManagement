@@ -20,4 +20,37 @@ public class HealthEntity extends BaseEntity {
 
     @ManyToOne
     AnimalEntity animal;
+
+    public HealthEntity() {
+    }
+
+    public HealthEntity(String status, Date updateDate, AnimalEntity animal) {
+        this.status = status;
+        this.updateDate = updateDate;
+        this.animal = animal;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public AnimalEntity getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(AnimalEntity animal) {
+        this.animal = animal;
+    }
 }

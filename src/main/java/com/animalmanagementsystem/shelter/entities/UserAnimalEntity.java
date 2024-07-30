@@ -8,22 +8,20 @@ import jakarta.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name = "t_user_role")
-public class UserRoleEntity extends BaseEntity {
-
+@Table(name = "t_user_animal")
+public class UserAnimalEntity extends BaseEntity {
     @OneToMany(mappedBy = "email")
     private List<UserEntity> users;
 
     @OneToMany(mappedBy = "name")
-    private List<RoleEntity> roles;
+    private List<AnimalEntity> animals;
 
-
-    public UserRoleEntity() {
+    public UserAnimalEntity() {
     }
 
-    public UserRoleEntity(List<UserEntity> users, List<RoleEntity> roles) {
+    public UserAnimalEntity(List<UserEntity> users, List<AnimalEntity> animals) {
         this.users = users;
-        this.roles = roles;
+        this.animals = animals;
     }
 
     public List<UserEntity> getUsers() {
@@ -34,11 +32,11 @@ public class UserRoleEntity extends BaseEntity {
         this.users = users;
     }
 
-    public List<RoleEntity> getRoles() {
-        return roles;
+    public List<AnimalEntity> getAnimals() {
+        return animals;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
+    public void setAnimals(List<AnimalEntity> animals) {
+        this.animals = animals;
     }
 }
