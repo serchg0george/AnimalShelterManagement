@@ -1,8 +1,7 @@
-package com.animalmanagementsystem.shelter.repository;
+package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.UserAnimalDto;
 import com.animalmanagementsystem.shelter.entities.UserAnimalEntity;
-import com.animalmanagementsystem.shelter.mappers.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
