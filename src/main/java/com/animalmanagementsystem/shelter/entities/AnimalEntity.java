@@ -22,7 +22,7 @@ public class AnimalEntity extends BaseEntity {
     CageEntity cage;
 
     @OneToMany(mappedBy = "animals")
-    List<UserAnimalEntity> animals;
+    List<UserAnimalEntity> users;
 
     @OneToMany(mappedBy = "status")
     List<HealthEntity> health;
@@ -31,12 +31,12 @@ public class AnimalEntity extends BaseEntity {
     }
 
     public AnimalEntity(String name, String species, Integer age,
-                        CageEntity cage, List<UserAnimalEntity> animals, List<HealthEntity> health) {
+                        CageEntity cage, List<UserAnimalEntity> users, List<HealthEntity> health) {
         this.name = name;
         this.species = species;
         this.age = age;
         this.cage = cage;
-        this.animals = animals;
+        this.users = users;
         this.health = health;
     }
 
@@ -73,11 +73,11 @@ public class AnimalEntity extends BaseEntity {
     }
 
     public List<UserAnimalEntity> getAnimals() {
-        return animals;
+        return users;
     }
 
-    public void setAnimals(List<UserAnimalEntity> animals) {
-        this.animals = animals;
+    public void setAnimals(List<UserAnimalEntity> users) {
+        this.users = users;
     }
 
     public List<HealthEntity> getHealth() {
