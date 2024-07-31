@@ -2,19 +2,21 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
+import java.util.List;
+
 public class RoleDto extends BaseDto {
 
     private String name;
     private String description;
-    private UserRoleDto user;
+    private List<UserRoleDto> roles;
 
     public RoleDto() {
     }
 
-    public RoleDto(String name, String description, UserRoleDto user) {
+    public RoleDto(String name, String description, List<UserRoleDto> roles) {
         this.name = name;
         this.description = description;
-        this.user = user;
+        this.roles = roles;
     }
 
     public String getName() {
@@ -33,11 +35,11 @@ public class RoleDto extends BaseDto {
         this.description = description;
     }
 
-    public UserRoleDto getUser() {
-        return user;
+    public List<UserRoleDto> getRoles() {
+        return roles;
     }
 
-    public void setUser(UserRoleDto user) {
-        this.user = user;
+    public void setRoles(List<UserRoleDto> roles) {
+        this.roles = roles;
     }
 }

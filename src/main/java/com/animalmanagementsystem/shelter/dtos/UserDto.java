@@ -2,6 +2,8 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
+import java.util.List;
+
 public class UserDto extends BaseDto {
 
     private String email;
@@ -9,22 +11,22 @@ public class UserDto extends BaseDto {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    UserRoleDto role;
-    UserAnimalDto animal;
+    List<UserRoleDto> roles;
+    List<UserAnimalDto> animals;
 
 
     public UserDto() {
     }
 
-    public UserDto(String email, String password, String firstName,
-                   String lastName, String phoneNumber, UserRoleDto role, UserAnimalDto animal) {
+    public UserDto(String email, String password, String firstName, String lastName, String phoneNumber,
+                   List<UserRoleDto> roles, List<UserAnimalDto> animals) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.animal = animal;
+        this.roles = roles;
+        this.animals = animals;
     }
 
     public String getEmail() {
@@ -67,19 +69,19 @@ public class UserDto extends BaseDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public UserRoleDto getRole() {
-        return role;
+    public List<UserRoleDto> getRoles() {
+        return roles;
     }
 
-    public void setRole(UserRoleDto role) {
-        this.role = role;
+    public void setRoles(List<UserRoleDto> roles) {
+        this.roles = roles;
     }
 
-    public UserAnimalDto getAnimal() {
-        return animal;
+    public List<UserAnimalDto> getAnimals() {
+        return animals;
     }
 
-    public void setAnimal(UserAnimalDto animal) {
-        this.animal = animal;
+    public void setAnimals(List<UserAnimalDto> animals) {
+        this.animals = animals;
     }
 }
