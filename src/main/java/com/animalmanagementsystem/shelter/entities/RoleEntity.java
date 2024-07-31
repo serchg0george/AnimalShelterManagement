@@ -3,8 +3,10 @@ package com.animalmanagementsystem.shelter.entities;
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_role")
@@ -16,16 +18,17 @@ public class RoleEntity extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    UserRoleEntity user;
+
+    @OneToMany(mappedBy = "roles")
+    List<UserRoleEntity> roles;
 
     public RoleEntity() {
     }
 
-    public RoleEntity(String name, String description, UserRoleEntity user) {
+    public RoleEntity(String name, String description, List<UserRoleEntity> roles) {
         this.name = name;
         this.description = description;
-        this.user = user;
+        this.roles = roles;
     }
 
     public String getName() {
@@ -44,11 +47,11 @@ public class RoleEntity extends BaseEntity {
         this.description = description;
     }
 
-    public UserRoleEntity getUser() {
-        return user;
+    public List<UserRoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setUser(UserRoleEntity user) {
-        this.user = user;
+    public void setRoles(List<UserRoleEntity> roles) {
+        this.roles = roles;
     }
 }

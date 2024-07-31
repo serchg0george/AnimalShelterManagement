@@ -1,7 +1,10 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.util.List;
 
@@ -24,24 +27,27 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @ManyToOne
-    UserRoleEntity role;
 
     @OneToMany(mappedBy = "users")
-    private List<UserAnimalEntity> users;
+    private List<UserRoleEntity> roles;
+
+
+    @OneToMany(mappedBy = "users")
+    private List<UserAnimalEntity> animals;
 
     public UserEntity() {
     }
 
-    public UserEntity(String email, String password, String firstName, String lastName,
-                      String phoneNumber, UserRoleEntity role, List<UserAnimalEntity> users) {
+    public UserEntity(String email, String password, String firstName,
+                      String lastName, String phoneNumber,
+                      List<UserRoleEntity> roles, List<UserAnimalEntity> animals) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.users = users;
+        this.roles = roles;
+        this.animals = animals;
     }
 
     public String getEmail() {
@@ -84,19 +90,19 @@ public class UserEntity extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public UserRoleEntity getRole() {
-        return role;
+    public List<UserRoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole(UserRoleEntity role) {
-        this.role = role;
+    public void setRoles(List<UserRoleEntity> roles) {
+        this.roles = roles;
     }
 
-    public List<UserAnimalEntity> getUsers() {
-        return users;
+    public List<UserAnimalEntity> getAnimals() {
+        return animals;
     }
 
-    public void setUsers(List<UserAnimalEntity> users) {
-        this.users = users;
+    public void setAnimals(List<UserAnimalEntity> animals) {
+        this.animals = animals;
     }
 }
