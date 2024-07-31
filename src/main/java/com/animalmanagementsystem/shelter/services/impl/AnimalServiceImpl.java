@@ -58,7 +58,6 @@ public class AnimalServiceImpl implements AnimalService {
         updatedAnimalEntity.setSpecies(animalEntity.getSpecies());
         updatedAnimalEntity.setHealth(animalEntity.getHealth());
         updatedAnimalEntity.setCage(animalEntity.getCage());
-        updatedAnimalEntity.setUser(animalEntity.getUser());
         return animalMapper.mapEntityToDto(animalRepository.save(updatedAnimalEntity));
     }
 

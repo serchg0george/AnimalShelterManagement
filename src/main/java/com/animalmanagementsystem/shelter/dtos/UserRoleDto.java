@@ -2,24 +2,22 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
-import java.util.List;
-
 
 public class UserRoleDto extends BaseDto {
 
-    private final List<UserDto> users;
-    private final List<RoleDto> roles;
+    private final UserDto user;
+    private final RoleDto role;
 
-    public UserRoleDto(List<UserDto> users, List<RoleDto> roles) {
-        this.users = users;
-        this.roles = roles;
+    public UserRoleDto(UserDto user, RoleDto role) {
+        this.user = user;
+        this.role = role;
     }
 
-    public List<UserDto> getUsers() {
-        return users;
+    public UserDto getUsers() {
+        return user;
     }
 
-    public List<RoleDto> getRoles() {
-        return roles;
+    public RoleDto getRoles() {
+        return role;
     }
 }
