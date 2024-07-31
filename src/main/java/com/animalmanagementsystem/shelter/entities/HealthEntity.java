@@ -3,7 +3,6 @@ package com.animalmanagementsystem.shelter.entities;
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.util.Date;
@@ -18,16 +17,13 @@ public class HealthEntity extends BaseEntity {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @ManyToOne
-    AnimalEntity animal;
 
     public HealthEntity() {
     }
 
-    public HealthEntity(String status, Date updateDate, AnimalEntity animal) {
+    public HealthEntity(String status, Date updateDate) {
         this.status = status;
         this.updateDate = updateDate;
-        this.animal = animal;
     }
 
     public String getStatus() {
@@ -46,11 +42,4 @@ public class HealthEntity extends BaseEntity {
         this.updateDate = updateDate;
     }
 
-    public AnimalEntity getAnimal() {
-        return animal;
-    }
-
-    public void setAnimal(AnimalEntity animal) {
-        this.animal = animal;
-    }
 }

@@ -10,13 +10,13 @@ public class AnimalDto extends BaseDto {
     private Integer age;
     CageDto cage;
     List<UserAnimalDto> users;
-    List<HealthDto> health;
+    HealthDto health;
 
     public AnimalDto() {
     }
 
     public AnimalDto(String name, String species, Integer age, CageDto cage,
-                     List<UserAnimalDto> users, List<HealthDto> health) {
+                     List<UserAnimalDto> users, HealthDto health) {
         this.name = name;
         this.species = species;
         this.age = age;
@@ -65,11 +65,11 @@ public class AnimalDto extends BaseDto {
         this.users = users;
     }
 
-    public List<HealthDto> getHealth() {
+    public HealthDto getHealth() {
         return health;
     }
 
-    public void setHealth(List<HealthDto> health) {
+    public void setHealth(HealthDto health) {
         this.health = health;
     }
 }
