@@ -21,8 +21,8 @@ public class AnimalEntity extends BaseEntity {
     @ManyToOne
     CageEntity cage;
 
-    @ManyToOne
-    UserAnimalEntity user;
+    @OneToMany(mappedBy = "animals")
+    List<UserAnimalEntity> animals;
 
     @OneToMany(mappedBy = "status")
     List<HealthEntity> health;
@@ -30,13 +30,13 @@ public class AnimalEntity extends BaseEntity {
     public AnimalEntity() {
     }
 
-    public AnimalEntity(String name, String species, Integer age, CageEntity cage,
-                        UserAnimalEntity user, List<HealthEntity> health) {
+    public AnimalEntity(String name, String species, Integer age,
+                        CageEntity cage, List<UserAnimalEntity> animals, List<HealthEntity> health) {
         this.name = name;
         this.species = species;
         this.age = age;
         this.cage = cage;
-        this.user = user;
+        this.animals = animals;
         this.health = health;
     }
 
@@ -72,12 +72,12 @@ public class AnimalEntity extends BaseEntity {
         this.cage = cage;
     }
 
-    public UserAnimalEntity getUser() {
-        return user;
+    public List<UserAnimalEntity> getAnimals() {
+        return animals;
     }
 
-    public void setUser(UserAnimalEntity user) {
-        this.user = user;
+    public void setAnimals(List<UserAnimalEntity> animals) {
+        this.animals = animals;
     }
 
     public List<HealthEntity> getHealth() {
