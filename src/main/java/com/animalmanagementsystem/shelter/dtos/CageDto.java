@@ -5,15 +5,13 @@ import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 public class CageDto extends BaseDto {
     private String cageNumber;
     private String availability;
-    AnimalDto animal;
 
     public CageDto() {
     }
 
-    public CageDto(String cageNumber, String availability, AnimalDto animal) {
+    public CageDto(String cageNumber, String availability) {
         this.cageNumber = cageNumber;
         this.availability = availability;
-        this.animal = animal;
     }
 
     public String getCageNumber() {
@@ -32,11 +30,4 @@ public class CageDto extends BaseDto {
         this.availability = availability;
     }
 
-    public AnimalDto getAnimal() {
-        return animal;
-    }
-
-    public void setAnimal(AnimalDto animal) {
-        this.animal = animal;
-    }
 }

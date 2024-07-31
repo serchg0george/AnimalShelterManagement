@@ -3,10 +3,7 @@ package com.animalmanagementsystem.shelter.entities;
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.util.List;
 
 @Entity
 @Table(name = "t_user")
@@ -28,26 +25,16 @@ public class UserEntity extends BaseEntity {
     private String phoneNumber;
 
 
-    @OneToMany(mappedBy = "users")
-    private List<UserRoleEntity> roles;
-
-
-    @OneToMany(mappedBy = "users")
-    private List<UserAnimalEntity> animals;
-
     public UserEntity() {
     }
 
     public UserEntity(String email, String password, String firstName,
-                      String lastName, String phoneNumber,
-                      List<UserRoleEntity> roles, List<UserAnimalEntity> animals) {
+                      String lastName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.roles = roles;
-        this.animals = animals;
     }
 
     public String getEmail() {
@@ -90,19 +77,4 @@ public class UserEntity extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<UserRoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<UserRoleEntity> roles) {
-        this.roles = roles;
-    }
-
-    public List<UserAnimalEntity> getAnimals() {
-        return animals;
-    }
-
-    public void setAnimals(List<UserAnimalEntity> animals) {
-        this.animals = animals;
-    }
 }
