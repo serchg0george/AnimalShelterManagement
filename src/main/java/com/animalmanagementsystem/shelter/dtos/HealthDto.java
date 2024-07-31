@@ -8,15 +8,13 @@ public class HealthDto extends BaseDto {
 
     private String status;
     private Date updateDate;
-    AnimalDto animal;
 
     public HealthDto() {
     }
 
-    public HealthDto(String status, Date updateDate, AnimalDto animal) {
+    public HealthDto(String status, Date updateDate) {
         this.status = status;
         this.updateDate = updateDate;
-        this.animal = animal;
     }
 
     public String getStatus() {
@@ -33,13 +31,5 @@ public class HealthDto extends BaseDto {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }
-
-    public AnimalDto getAnimal() {
-        return animal;
-    }
-
-    public void setAnimal(AnimalDto animal) {
-        this.animal = animal;
     }
 }
