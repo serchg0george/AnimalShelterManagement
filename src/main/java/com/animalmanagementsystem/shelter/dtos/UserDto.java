@@ -2,8 +2,6 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
-import java.util.List;
-
 public class UserDto extends BaseDto {
 
     private String email;
@@ -11,22 +9,17 @@ public class UserDto extends BaseDto {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    List<UserRoleDto> roles;
-    List<UserAnimalDto> animals;
 
 
     public UserDto() {
     }
 
-    public UserDto(String email, String password, String firstName, String lastName, String phoneNumber,
-                   List<UserRoleDto> roles, List<UserAnimalDto> animals) {
+    public UserDto(String email, String password, String firstName, String lastName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.roles = roles;
-        this.animals = animals;
     }
 
     public String getEmail() {
@@ -69,19 +62,4 @@ public class UserDto extends BaseDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<UserRoleDto> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<UserRoleDto> roles) {
-        this.roles = roles;
-    }
-
-    public List<UserAnimalDto> getAnimals() {
-        return animals;
-    }
-
-    public void setAnimals(List<UserAnimalDto> animals) {
-        this.animals = animals;
-    }
 }
