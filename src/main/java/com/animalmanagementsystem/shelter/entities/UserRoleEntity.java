@@ -2,42 +2,40 @@ package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import java.util.List;
 
 @Entity
 @Table(name = "t_user_role")
 public class UserRoleEntity extends BaseEntity {
 
-    @OneToMany(mappedBy = "email")
-    private List<UserEntity> users;
+    @ManyToOne
+    UserEntity users;
 
-    @OneToMany(mappedBy = "name")
-    private List<RoleEntity> roles;
+    @ManyToOne
+    RoleEntity roles;
 
     public UserRoleEntity() {
     }
 
-    public UserRoleEntity(List<UserEntity> users, List<RoleEntity> roles) {
+    public UserRoleEntity(UserEntity users, RoleEntity roles) {
         this.users = users;
         this.roles = roles;
     }
 
-    public List<UserEntity> getUsers() {
+    public UserEntity getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserEntity> users) {
+    public void setUsers(UserEntity users) {
         this.users = users;
     }
 
-    public List<RoleEntity> getRoles() {
+    public RoleEntity getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
+    public void setRoles(RoleEntity roles) {
         this.roles = roles;
     }
 }
