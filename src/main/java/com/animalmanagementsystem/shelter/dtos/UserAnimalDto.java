@@ -2,22 +2,20 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
-import java.util.List;
-
 public class UserAnimalDto extends BaseDto {
-    private final List<UserDto> users;
-    private final List<AnimalDto> animals;
+    private final UserDto user;
+    private final AnimalDto animal;
 
-    public UserAnimalDto(List<UserDto> users, List<AnimalDto> animals) {
-        this.users = users;
-        this.animals = animals;
+    public UserAnimalDto(UserDto user, AnimalDto animal) {
+        this.user = user;
+        this.animal = animal;
     }
 
-    public List<UserDto> getUsers() {
-        return users;
+    public UserDto getUsers() {
+        return user;
     }
 
-    public List<AnimalDto> getAnimals() {
-        return animals;
+    public AnimalDto getAnimals() {
+        return animal;
     }
 }
