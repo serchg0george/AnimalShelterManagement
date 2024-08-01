@@ -1,0 +1,49 @@
+package com.animalmanagementsystem.shelter.controllers;
+
+import com.animalmanagementsystem.shelter.dtos.CageDto;
+import com.animalmanagementsystem.shelter.services.CageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("api/v1/cage")
+public class CageController {
+
+    private final CageService cageService;
+
+    public CageController(CageService cageService) {
+        this.cageService = cageService;
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createCage(@RequestBody CageDto cageDto) {
+        cageService.createCage(cageDto);
+        return ResponseEntity.ok("Cage created");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CageDto>> getAllCages() {
+        return new ResponseEntity<>(cageService.getAllCages(), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<CageDto> getCageById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(cageService.getCageById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<String> updateCage(@PathVariable("id") Long id,
+                                             @RequestBody CageDto cageDto) {
+        cageService.updateCage(cageDto, id);
+        return ResponseEntity.ok("Cage updated");
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteCage(@PathVariable("id") Long id) {
+        cageService.deleteCage(id);
+        return ResponseEntity.ok("Cage deleted");
+    }
+}
