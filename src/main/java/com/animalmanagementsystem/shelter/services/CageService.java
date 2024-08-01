@@ -11,7 +11,7 @@ public interface CageService {
 
     List<CageDto> getAllCages();
 
-    CageDto updateCage(CageDto cageDto);
+    CageDto updateCage(CageDto cageDto, Long id);
 
     void deleteCage(Long id);
 }
