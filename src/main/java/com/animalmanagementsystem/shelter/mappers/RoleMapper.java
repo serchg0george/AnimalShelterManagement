@@ -2,8 +2,9 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class RoleMapper {
 
     public RoleDto mapEntityToDto(RoleEntity entity) {
