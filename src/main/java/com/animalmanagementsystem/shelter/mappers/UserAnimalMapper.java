@@ -2,11 +2,12 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.*;
 import com.animalmanagementsystem.shelter.entities.*;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class UserAnimalMapper {
 
     public UserAnimalDto mapEntityToDto(UserAnimalEntity entity) {
@@ -71,7 +72,7 @@ public class UserAnimalMapper {
 
     protected List<UserAnimalEntity> userAnimalDtoListToUserAnimalEntityList(List<UserAnimalDto> list) {
         if (list == null) {
-            return null;
+            return List.of();
         }
 
         List<UserAnimalEntity> list1 = new ArrayList<>(list.size());
