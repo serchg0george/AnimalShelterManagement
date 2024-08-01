@@ -46,7 +46,7 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
-    public CageDto updateCage(CageDto cageDto) {
+    public CageDto updateCage(CageDto cageDto, Long id) {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDto);
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(cageDto.getId());
         if (optionalCageEntity.isEmpty()) {
@@ -55,6 +55,7 @@ public class CageServiceImpl implements CageService {
         CageEntity updatedCageEntity = optionalCageEntity.get();
         updatedCageEntity.setCageNumber(cageEntity.getCageNumber());
         updatedCageEntity.setAvailability(cageEntity.getAvailability());
+        updatedCageEntity.setId(id);
         return cageMapper.mapEntityToDto(cageRepository.save(updatedCageEntity));
     }
 
