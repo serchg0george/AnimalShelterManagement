@@ -1,0 +1,50 @@
+package com.animalmanagementsystem.shelter.controllers;
+
+import com.animalmanagementsystem.shelter.dtos.UserDto;
+import com.animalmanagementsystem.shelter.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("api/v1/user")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+        userService.createUser(userDto);
+        return ResponseEntity.ok("User created");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<String> updateUser(@PathVariable("id") Long id,
+                                             @RequestBody UserDto userDto) {
+        userService.updateUser(userDto, id);
+        return ResponseEntity.ok("User updated");
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted");
+    }
+
+}
