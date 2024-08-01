@@ -46,7 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDto updateAnimal(AnimalDto animalDto) {
+    public AnimalDto updateAnimal(AnimalDto animalDto, Long id) {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.getId());
         if (optionalAnimalEntity.isEmpty()) {
@@ -58,6 +58,7 @@ public class AnimalServiceImpl implements AnimalService {
         updatedAnimalEntity.setSpecies(animalEntity.getSpecies());
         updatedAnimalEntity.setHealth(animalEntity.getHealth());
         updatedAnimalEntity.setCage(animalEntity.getCage());
+        updatedAnimalEntity.setId(id);
         return animalMapper.mapEntityToDto(animalRepository.save(updatedAnimalEntity));
     }
 

@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface AnimalService {
     AnimalDto createAnimal(AnimalDto animalDto);
+
     AnimalDto getAnimalById(Long id);
+
     List<AnimalDto> getAllAnimals();
-    AnimalDto updateAnimal(AnimalDto animalDto);
+
+    AnimalDto updateAnimal(AnimalDto animalDto, Long id);
+
     void deleteAnimal(Long id);
 }
