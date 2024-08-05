@@ -5,19 +5,19 @@ import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
 public class UserRoleDto extends BaseDto {
 
-    private final UserDto user;
-    private final RoleDto role;
+    private final UserDto users;
+    private final RoleDto roles;
 
-    public UserRoleDto(UserDto user, RoleDto role) {
-        this.user = user;
-        this.role = role;
+    public UserRoleDto(UserDto users, RoleDto roles) {
+        this.users = users;
+        this.roles = roles;
     }
 
     public UserDto getUsers() {
-        return user;
+        return users;
     }
 
     public RoleDto getRoles() {
-        return role;
+        return roles;
     }
 }
