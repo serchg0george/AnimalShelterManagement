@@ -16,10 +16,13 @@ public class UserRoleMapper {
             return null;
         }
 
-        UserDto user = null;
-        RoleDto role = null;
+        UserDto users = null;
+        RoleDto roles = null;
 
-        UserRoleDto userRoleDto = new UserRoleDto(user, role);
+        users = userEntityToUserDto(entity.getUsers());
+        roles = roleEntityToRoleDto(entity.getRoles());
+
+        UserRoleDto userRoleDto = new UserRoleDto(users, roles);
 
         userRoleDto.setId(entity.getId());
 
@@ -38,6 +41,37 @@ public class UserRoleMapper {
         userRoleEntity.setRoles(roleDtoToRoleEntity(dto.getRoles()));
 
         return userRoleEntity;
+    }
+
+    protected UserDto userEntityToUserDto(UserEntity userEntity) {
+        if (userEntity == null) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+
+        userDto.setId(userEntity.getId());
+        userDto.setEmail(userEntity.getEmail());
+        userDto.setPassword(userEntity.getPassword());
+        userDto.setFirstName(userEntity.getFirstName());
+        userDto.setLastName(userEntity.getLastName());
+        userDto.setPhoneNumber(userEntity.getPhoneNumber());
+
+        return userDto;
+    }
+
+    protected RoleDto roleEntityToRoleDto(RoleEntity roleEntity) {
+        if (roleEntity == null) {
+            return null;
+        }
+
+        RoleDto roleDto = new RoleDto();
+
+        roleDto.setId(roleEntity.getId());
+        roleDto.setName(roleEntity.getName());
+        roleDto.setDescription(roleEntity.getDescription());
+
+        return roleDto;
     }
 
     protected UserEntity userDtoToUserEntity(UserDto userDto) {

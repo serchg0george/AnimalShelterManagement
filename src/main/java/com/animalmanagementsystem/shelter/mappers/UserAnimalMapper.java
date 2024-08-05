@@ -15,11 +15,10 @@ public class UserAnimalMapper {
             return null;
         }
 
-        UserDto users = null;
-        AnimalDto animals = null;
+        UserDto users = userEntityToUserDto(entity.getUsers());
+        AnimalDto animals = animalEntityToAnimalDto(entity.getAnimals());
 
         UserAnimalDto userAnimalDto = new UserAnimalDto(users, animals);
-
         userAnimalDto.setId(entity.getId());
 
         return userAnimalDto;
@@ -31,12 +30,27 @@ public class UserAnimalMapper {
         }
 
         UserAnimalEntity userAnimalEntity = new UserAnimalEntity();
-
         userAnimalEntity.setId(dto.getId());
         userAnimalEntity.setUsers(userDtoToUserEntity(dto.getUsers()));
         userAnimalEntity.setAnimals(animalDtoToAnimalEntity(dto.getAnimals()));
 
         return userAnimalEntity;
+    }
+
+    protected UserDto userEntityToUserDto(UserEntity userEntity) {
+        if (userEntity == null) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+        userDto.setId(userEntity.getId());
+        userDto.setEmail(userEntity.getEmail());
+        userDto.setPassword(userEntity.getPassword());
+        userDto.setFirstName(userEntity.getFirstName());
+        userDto.setLastName(userEntity.getLastName());
+        userDto.setPhoneNumber(userEntity.getPhoneNumber());
+
+        return userDto;
     }
 
     protected UserEntity userDtoToUserEntity(UserDto userDto) {
@@ -45,7 +59,6 @@ public class UserAnimalMapper {
         }
 
         UserEntity userEntity = new UserEntity();
-
         userEntity.setId(userDto.getId());
         userEntity.setEmail(userDto.getEmail());
         userEntity.setPassword(userDto.getPassword());
@@ -62,7 +75,6 @@ public class UserAnimalMapper {
         }
 
         CageEntity cageEntity = new CageEntity();
-
         cageEntity.setId(cageDto.getId());
         cageEntity.setCageNumber(cageDto.getCageNumber());
         cageEntity.setAvailability(cageDto.getAvailability());
@@ -89,12 +101,27 @@ public class UserAnimalMapper {
         }
 
         HealthEntity healthEntity = new HealthEntity();
-
         healthEntity.setId(healthDto.getId());
         healthEntity.setStatus(healthDto.getStatus());
         healthEntity.setUpdateDate(healthDto.getUpdateDate());
 
         return healthEntity;
+    }
+
+    protected AnimalDto animalEntityToAnimalDto(AnimalEntity animalEntity) {
+        if (animalEntity == null) {
+            return null;
+        }
+
+        AnimalDto animalDto = new AnimalDto();
+        animalDto.setId(animalEntity.getId());
+        animalDto.setName(animalEntity.getName());
+        animalDto.setSpecies(animalEntity.getSpecies());
+        animalDto.setAge(animalEntity.getAge());
+        animalDto.setCage(cageEntityToCageDto(animalEntity.getCage()));
+        animalDto.setHealth(healthEntityToHealthDto(animalEntity.getHealth()));
+
+        return animalDto;
     }
 
     protected AnimalEntity animalDtoToAnimalEntity(AnimalDto animalDto) {
@@ -103,15 +130,39 @@ public class UserAnimalMapper {
         }
 
         AnimalEntity animalEntity = new AnimalEntity();
-
         animalEntity.setId(animalDto.getId());
         animalEntity.setName(animalDto.getName());
         animalEntity.setSpecies(animalDto.getSpecies());
         animalEntity.setAge(animalDto.getAge());
         animalEntity.setCage(cageDtoToCageEntity(animalDto.getCage()));
-        animalEntity.setAnimals(userAnimalDtoListToUserAnimalEntityList(animalDto.getAnimals()));
         animalEntity.setHealth(healthDtoToHealthEntity(animalDto.getHealth()));
 
         return animalEntity;
+    }
+
+    protected CageDto cageEntityToCageDto(CageEntity cageEntity) {
+        if (cageEntity == null) {
+            return null;
+        }
+
+        CageDto cageDto = new CageDto();
+        cageDto.setId(cageEntity.getId());
+        cageDto.setCageNumber(cageEntity.getCageNumber());
+        cageDto.setAvailability(cageEntity.getAvailability());
+
+        return cageDto;
+    }
+
+    protected HealthDto healthEntityToHealthDto(HealthEntity healthEntity) {
+        if (healthEntity == null) {
+            return null;
+        }
+
+        HealthDto healthDto = new HealthDto();
+        healthDto.setId(healthEntity.getId());
+        healthDto.setStatus(healthEntity.getStatus());
+        healthDto.setUpdateDate(healthEntity.getUpdateDate());
+
+        return healthDto;
     }
 }

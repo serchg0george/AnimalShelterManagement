@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -9,10 +10,10 @@ import jakarta.persistence.Table;
 @Table(name = "t_user_role")
 public class UserRoleEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH})
     UserEntity users;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH})
     RoleEntity roles;
 
     public UserRoleEntity() {

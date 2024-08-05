@@ -1,9 +1,9 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_user")
@@ -24,6 +24,13 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
+            mappedBy = "users", fetch = FetchType.LAZY)
+    private List<UserAnimalEntity> userAnimalEntity;
+
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
+            mappedBy = "users", fetch = FetchType.LAZY)
+    private List<UserRoleEntity> userRoleEntity;
 
     public UserEntity() {
     }
