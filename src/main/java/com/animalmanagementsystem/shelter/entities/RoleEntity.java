@@ -1,9 +1,9 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_role")
@@ -14,6 +14,10 @@ public class RoleEntity extends BaseEntity {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REMOVE}, mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<UserRoleEntity> userRoles;
 
 
     public RoleEntity() {

@@ -60,15 +60,35 @@ public class AnimalMapper {
         return cageDto;
     }
 
+    protected UserDto userEntityToUserDto(UserEntity userEntity) {
+        if (userEntity == null) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+
+        userDto.setId(userEntity.getId());
+        userDto.setEmail(userEntity.getEmail());
+        userDto.setPassword(userEntity.getPassword());
+        userDto.setFirstName(userEntity.getFirstName());
+        userDto.setLastName(userEntity.getLastName());
+        userDto.setPhoneNumber(userEntity.getPhoneNumber());
+
+        return userDto;
+    }
+
     protected UserAnimalDto userAnimalEntityToUserAnimalDto(UserAnimalEntity userAnimalEntity) {
         if (userAnimalEntity == null) {
             return null;
         }
 
-        UserDto user = null;
-        AnimalDto animal = null;
+        UserDto users = null;
+        AnimalDto animals = null;
 
-        UserAnimalDto userAnimalDto = new UserAnimalDto(user, animal);
+        users = userEntityToUserDto(userAnimalEntity.getUsers());
+        animals = mapEntityToDto(userAnimalEntity.getAnimals());
+
+        UserAnimalDto userAnimalDto = new UserAnimalDto(users, animals);
 
         userAnimalDto.setId(userAnimalEntity.getId());
 
