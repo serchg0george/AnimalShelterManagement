@@ -2,20 +2,27 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
+import java.util.List;
+
 public class AnimalDto extends BaseDto {
     private String name;
     private String species;
     private Integer age;
     CageDto cage;
+    List<UserAnimalDto> users;
+    HealthDto health;
 
     public AnimalDto() {
     }
 
-    public AnimalDto(String name, String species, Integer age, CageDto cage) {
+    public AnimalDto(String name, String species, Integer age, CageDto cage,
+                     List<UserAnimalDto> users, HealthDto health) {
         this.name = name;
         this.species = species;
         this.age = age;
         this.cage = cage;
+        this.users = users;
+        this.health = health;
     }
 
     public String getName() {
@@ -48,5 +55,21 @@ public class AnimalDto extends BaseDto {
 
     public void setCage(CageDto cage) {
         this.cage = cage;
+    }
+
+    public List<UserAnimalDto> getAnimals() {
+        return users;
+    }
+
+    public void setAnimals(List<UserAnimalDto> users) {
+        this.users = users;
+    }
+
+    public HealthDto getHealth() {
+        return health;
+    }
+
+    public void setHealth(HealthDto health) {
+        this.health = health;
     }
 }

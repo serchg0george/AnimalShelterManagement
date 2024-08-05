@@ -6,15 +6,13 @@ public class RoleDto extends BaseDto {
 
     private String name;
     private String description;
-    private UserRoleDto user;
 
     public RoleDto() {
     }
 
-    public RoleDto(String name, String description, UserRoleDto user) {
+    public RoleDto(String name, String description) {
         this.name = name;
         this.description = description;
-        this.user = user;
     }
 
     public String getName() {
@@ -33,11 +31,4 @@ public class RoleDto extends BaseDto {
         this.description = description;
     }
 
-    public UserRoleDto getUser() {
-        return user;
-    }
-
-    public void setUser(UserRoleDto user) {
-        this.user = user;
-    }
 }

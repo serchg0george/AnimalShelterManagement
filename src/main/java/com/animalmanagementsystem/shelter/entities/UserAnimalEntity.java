@@ -7,21 +7,23 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "t_user_role")
-public class UserRoleEntity extends BaseEntity {
+@Table(name = "t_user_animal")
+public class UserAnimalEntity extends BaseEntity {
+
 
     @ManyToOne(cascade = {CascadeType.DETACH})
     UserEntity users;
 
-    @ManyToOne(cascade = {CascadeType.DETACH})
-    RoleEntity roles;
 
-    public UserRoleEntity() {
+    @ManyToOne(cascade = {CascadeType.DETACH})
+    AnimalEntity animals;
+
+    public UserAnimalEntity() {
     }
 
-    public UserRoleEntity(UserEntity users, RoleEntity roles) {
+    public UserAnimalEntity(UserEntity users, AnimalEntity animals) {
         this.users = users;
-        this.roles = roles;
+        this.animals = animals;
     }
 
     public UserEntity getUsers() {
@@ -32,11 +34,11 @@ public class UserRoleEntity extends BaseEntity {
         this.users = users;
     }
 
-    public RoleEntity getRoles() {
-        return roles;
+    public AnimalEntity getAnimals() {
+        return animals;
     }
 
-    public void setRoles(RoleEntity roles) {
-        this.roles = roles;
+    public void setAnimals(AnimalEntity animals) {
+        this.animals = animals;
     }
 }

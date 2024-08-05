@@ -1,7 +1,6 @@
 package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
-import com.animalmanagementsystem.shelter.entities.UserRoleEntity;
 
 public class UserDto extends BaseDto {
 
@@ -10,19 +9,17 @@ public class UserDto extends BaseDto {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    UserRoleEntity role;
+
 
     public UserDto() {
     }
 
-    public UserDto(String email, String password, String firstName,
-                   String lastName, String phoneNumber, UserRoleEntity role) {
+    public UserDto(String email, String password, String firstName, String lastName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.role = role;
     }
 
     public String getEmail() {
@@ -65,11 +62,4 @@ public class UserDto extends BaseDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public UserRoleEntity getRole() {
-        return role;
-    }
-
-    public void setRole(UserRoleEntity role) {
-        this.role = role;
-    }
 }

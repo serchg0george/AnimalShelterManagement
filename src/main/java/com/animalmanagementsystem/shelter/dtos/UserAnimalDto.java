@@ -2,22 +2,21 @@ package com.animalmanagementsystem.shelter.dtos;
 
 import com.animalmanagementsystem.shelter.dtos.base.BaseDto;
 
-
-public class UserRoleDto extends BaseDto {
-
+public class UserAnimalDto extends BaseDto {
     private final UserDto users;
-    private final RoleDto roles;
+    private final AnimalDto animals;
 
-    public UserRoleDto(UserDto users, RoleDto roles) {
+
+    public UserAnimalDto(UserDto users, AnimalDto animals) {
         this.users = users;
-        this.roles = roles;
+        this.animals = animals;
     }
 
     public UserDto getUsers() {
         return users;
     }
 
-    public RoleDto getRoles() {
-        return roles;
+    public AnimalDto getAnimals() {
+        return animals;
     }
 }
