@@ -15,10 +15,10 @@ public class UserAnimalMapper {
             return null;
         }
 
-        UserDto user = null;
-        AnimalDto animal = null;
+        UserDto users = null;
+        AnimalDto animals = null;
 
-        UserAnimalDto userAnimalDto = new UserAnimalDto(user, animal);
+        UserAnimalDto userAnimalDto = new UserAnimalDto(users, animals);
 
         userAnimalDto.setId(entity.getId());
 
