@@ -5,16 +5,23 @@ import com.animalmanagementsystem.shelter.entities.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class AnimalMapper {
 
     public AnimalDto mapEntityToDto(AnimalEntity entity) {
-        if (entity == null) {
+        return mapEntityToDto(entity, new HashSet<>());
+    }
+
+    private AnimalDto mapEntityToDto(AnimalEntity entity, Set<Long> mappedAnimals) {
+        if (entity == null || mappedAnimals.contains(entity.getId())) {
             return null;
         }
 
+        mappedAnimals.add(entity.getId());
         AnimalDto animalDto = new AnimalDto();
 
         animalDto.setId(entity.getId());
@@ -22,17 +29,22 @@ public class AnimalMapper {
         animalDto.setSpecies(entity.getSpecies());
         animalDto.setAge(entity.getAge());
         animalDto.setCage(cageEntityToCageDto(entity.getCage()));
-        animalDto.setAnimals(userAnimalEntityListToUserAnimalDtoList(entity.getAnimals()));
+        animalDto.setAnimals(userAnimalEntityListToUserAnimalDtoList(entity.getAnimals(), mappedAnimals));
         animalDto.setHealth(healthEntityToHealthDto(entity.getHealth()));
 
         return animalDto;
     }
 
     public AnimalEntity mapDtoToEntity(AnimalDto dto) {
-        if (dto == null) {
+        return mapDtoToEntity(dto, new HashSet<>());
+    }
+
+    private AnimalEntity mapDtoToEntity(AnimalDto dto, Set<Long> mappedAnimals) {
+        if (dto == null || mappedAnimals.contains(dto.getId())) {
             return null;
         }
 
+        mappedAnimals.add(dto.getId());
         AnimalEntity animalEntity = new AnimalEntity();
 
         animalEntity.setId(dto.getId());
@@ -40,7 +52,7 @@ public class AnimalMapper {
         animalEntity.setSpecies(dto.getSpecies());
         animalEntity.setAge(dto.getAge());
         animalEntity.setCage(cageDtoToCageEntity(dto.getCage()));
-        animalEntity.setAnimals(userAnimalDtoListToUserAnimalEntityList(dto.getAnimals()));
+        animalEntity.setAnimals(userAnimalDtoListToUserAnimalEntityList(dto.getAnimals(), mappedAnimals));
         animalEntity.setHealth(healthDtoToHealthEntity(dto.getHealth()));
 
         return animalEntity;
@@ -77,16 +89,13 @@ public class AnimalMapper {
         return userDto;
     }
 
-    protected UserAnimalDto userAnimalEntityToUserAnimalDto(UserAnimalEntity userAnimalEntity) {
+    protected UserAnimalDto userAnimalEntityToUserAnimalDto(UserAnimalEntity userAnimalEntity, Set<Long> mappedAnimals) {
         if (userAnimalEntity == null) {
             return null;
         }
 
-        UserDto users = null;
-        AnimalDto animals = null;
-
-        users = userEntityToUserDto(userAnimalEntity.getUsers());
-        animals = mapEntityToDto(userAnimalEntity.getAnimals());
+        UserDto users = userEntityToUserDto(userAnimalEntity.getUsers());
+        AnimalDto animals = mapEntityToDto(userAnimalEntity.getAnimals(), mappedAnimals);
 
         UserAnimalDto userAnimalDto = new UserAnimalDto(users, animals);
 
@@ -95,14 +104,14 @@ public class AnimalMapper {
         return userAnimalDto;
     }
 
-    protected List<UserAnimalDto> userAnimalEntityListToUserAnimalDtoList(List<UserAnimalEntity> list) {
+    protected List<UserAnimalDto> userAnimalEntityListToUserAnimalDtoList(List<UserAnimalEntity> list, Set<Long> mappedAnimals) {
         if (list == null) {
             return List.of();
         }
 
         List<UserAnimalDto> list1 = new ArrayList<>(list.size());
         for (UserAnimalEntity userAnimalEntity : list) {
-            list1.add(userAnimalEntityToUserAnimalDto(userAnimalEntity));
+            list1.add(userAnimalEntityToUserAnimalDto(userAnimalEntity, mappedAnimals));
         }
 
         return list1;
@@ -153,7 +162,7 @@ public class AnimalMapper {
         return userEntity;
     }
 
-    protected UserAnimalEntity userAnimalDtoToUserAnimalEntity(UserAnimalDto userAnimalDto) {
+    protected UserAnimalEntity userAnimalDtoToUserAnimalEntity(UserAnimalDto userAnimalDto, Set<Long> mappedAnimals) {
         if (userAnimalDto == null) {
             return null;
         }
@@ -162,19 +171,19 @@ public class AnimalMapper {
 
         userAnimalEntity.setId(userAnimalDto.getId());
         userAnimalEntity.setUsers(userDtoToUserEntity(userAnimalDto.getUsers()));
-        userAnimalEntity.setAnimals(mapDtoToEntity(userAnimalDto.getAnimals()));
+        userAnimalEntity.setAnimals(mapDtoToEntity(userAnimalDto.getAnimals(), mappedAnimals));
 
         return userAnimalEntity;
     }
 
-    protected List<UserAnimalEntity> userAnimalDtoListToUserAnimalEntityList(List<UserAnimalDto> list) {
+    protected List<UserAnimalEntity> userAnimalDtoListToUserAnimalEntityList(List<UserAnimalDto> list, Set<Long> mappedAnimals) {
         if (list == null) {
             return List.of();
         }
 
         List<UserAnimalEntity> list1 = new ArrayList<>(list.size());
         for (UserAnimalDto userAnimalDto : list) {
-            list1.add(userAnimalDtoToUserAnimalEntity(userAnimalDto));
+            list1.add(userAnimalDtoToUserAnimalEntity(userAnimalDto, mappedAnimals));
         }
 
         return list1;
