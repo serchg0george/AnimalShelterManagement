@@ -2,12 +2,9 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.*;
 import com.animalmanagementsystem.shelter.entities.*;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class UserAnimalMapper {
 
     public UserAnimalDto mapEntityToDto(UserAnimalEntity entity) {
@@ -15,13 +12,15 @@ public class UserAnimalMapper {
             return null;
         }
 
-        UserDto users = userEntityToUserDto(entity.getUsers());
-        AnimalDto animals = animalEntityToAnimalDto(entity.getAnimals());
+        Long id = null;
+        UserDto users = null;
+        AnimalDto animals = null;
 
-        UserAnimalDto userAnimalDto = new UserAnimalDto(users, animals);
-        userAnimalDto.setId(entity.getId());
+        id = entity.getId();
+        users = userEntityToUserDto(entity.getUsers());
+        animals = animalEntityToAnimalDto(entity.getAnimals());
 
-        return userAnimalDto;
+        return new UserAnimalDto(id, users, animals);
     }
 
     public UserAnimalEntity mapDtoToEntity(UserAnimalDto dto) {
@@ -30,9 +29,10 @@ public class UserAnimalMapper {
         }
 
         UserAnimalEntity userAnimalEntity = new UserAnimalEntity();
-        userAnimalEntity.setId(dto.getId());
-        userAnimalEntity.setUsers(userDtoToUserEntity(dto.getUsers()));
-        userAnimalEntity.setAnimals(animalDtoToAnimalEntity(dto.getAnimals()));
+
+        userAnimalEntity.setId(dto.id());
+        userAnimalEntity.setUsers(userDtoToUserEntity(dto.users()));
+        userAnimalEntity.setAnimals(animalDtoToAnimalEntity(dto.animals()));
 
         return userAnimalEntity;
     }
@@ -42,15 +42,77 @@ public class UserAnimalMapper {
             return null;
         }
 
-        UserDto userDto = new UserDto();
-        userDto.setId(userEntity.getId());
-        userDto.setEmail(userEntity.getEmail());
-        userDto.setPassword(userEntity.getPassword());
-        userDto.setFirstName(userEntity.getFirstName());
-        userDto.setLastName(userEntity.getLastName());
-        userDto.setPhoneNumber(userEntity.getPhoneNumber());
+        Long id = null;
+        String email = null;
+        String password = null;
+        String firstName = null;
+        String lastName = null;
+        String phoneNumber = null;
 
-        return userDto;
+        id = userEntity.getId();
+        email = userEntity.getEmail();
+        password = userEntity.getPassword();
+        firstName = userEntity.getFirstName();
+        lastName = userEntity.getLastName();
+        phoneNumber = userEntity.getPhoneNumber();
+
+        return new UserDto(id, email, password, firstName, lastName, phoneNumber);
+    }
+
+    protected CageDto cageEntityToCageDto(CageEntity cageEntity) {
+        if (cageEntity == null) {
+            return null;
+        }
+
+        Long id = null;
+        String cageNumber = null;
+        String availability = null;
+
+        id = cageEntity.getId();
+        cageNumber = cageEntity.getCageNumber();
+        availability = cageEntity.getAvailability();
+
+        return new CageDto(id, cageNumber, availability);
+    }
+
+    protected HealthDto healthEntityToHealthDto(HealthEntity healthEntity) {
+        if (healthEntity == null) {
+            return null;
+        }
+
+        Long id = null;
+        String status = null;
+
+        id = healthEntity.getId();
+        status = healthEntity.getStatus();
+
+        String availability = null;
+
+        return new HealthDto(id, status, availability);
+    }
+
+    protected AnimalDto animalEntityToAnimalDto(AnimalEntity animalEntity) {
+        if (animalEntity == null) {
+            return null;
+        }
+
+        Long id = null;
+        String name = null;
+        String species = null;
+        Integer age = null;
+        CageDto cage = null;
+        HealthDto health = null;
+
+        id = animalEntity.getId();
+        name = animalEntity.getName();
+        species = animalEntity.getSpecies();
+        age = animalEntity.getAge();
+        cage = cageEntityToCageDto(animalEntity.getCage());
+        health = healthEntityToHealthDto(animalEntity.getHealth());
+
+        List<UserAnimalDto> users = null;
+
+        return new AnimalDto(id, name, species, age, cage, users, health);
     }
 
     protected UserEntity userDtoToUserEntity(UserDto userDto) {
@@ -59,12 +121,13 @@ public class UserAnimalMapper {
         }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(userDto.getId());
-        userEntity.setEmail(userDto.getEmail());
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setFirstName(userDto.getFirstName());
-        userEntity.setLastName(userDto.getLastName());
-        userEntity.setPhoneNumber(userDto.getPhoneNumber());
+
+        userEntity.setId(userDto.id());
+        userEntity.setEmail(userDto.email());
+        userEntity.setPassword(userDto.password());
+        userEntity.setFirstName(userDto.firstName());
+        userEntity.setLastName(userDto.lastName());
+        userEntity.setPhoneNumber(userDto.phoneNumber());
 
         return userEntity;
     }
@@ -75,24 +138,12 @@ public class UserAnimalMapper {
         }
 
         CageEntity cageEntity = new CageEntity();
-        cageEntity.setId(cageDto.getId());
-        cageEntity.setCageNumber(cageDto.getCageNumber());
-        cageEntity.setAvailability(cageDto.getAvailability());
+
+        cageEntity.setId(cageDto.id());
+        cageEntity.setCageNumber(cageDto.cageNumber());
+        cageEntity.setAvailability(cageDto.availability());
 
         return cageEntity;
-    }
-
-    protected List<UserAnimalEntity> userAnimalDtoListToUserAnimalEntityList(List<UserAnimalDto> list) {
-        if (list == null) {
-            return List.of();
-        }
-
-        List<UserAnimalEntity> list1 = new ArrayList<>(list.size());
-        for (UserAnimalDto userAnimalDto : list) {
-            list1.add(mapDtoToEntity(userAnimalDto));
-        }
-
-        return list1;
     }
 
     protected HealthEntity healthDtoToHealthEntity(HealthDto healthDto) {
@@ -101,27 +152,11 @@ public class UserAnimalMapper {
         }
 
         HealthEntity healthEntity = new HealthEntity();
-        healthEntity.setId(healthDto.getId());
-        healthEntity.setStatus(healthDto.getStatus());
-        healthEntity.setUpdateDate(healthDto.getUpdateDate());
+
+        healthEntity.setId(healthDto.id());
+        healthEntity.setStatus(healthDto.status());
 
         return healthEntity;
-    }
-
-    protected AnimalDto animalEntityToAnimalDto(AnimalEntity animalEntity) {
-        if (animalEntity == null) {
-            return null;
-        }
-
-        AnimalDto animalDto = new AnimalDto();
-        animalDto.setId(animalEntity.getId());
-        animalDto.setName(animalEntity.getName());
-        animalDto.setSpecies(animalEntity.getSpecies());
-        animalDto.setAge(animalEntity.getAge());
-        animalDto.setCage(cageEntityToCageDto(animalEntity.getCage()));
-        animalDto.setHealth(healthEntityToHealthDto(animalEntity.getHealth()));
-
-        return animalDto;
     }
 
     protected AnimalEntity animalDtoToAnimalEntity(AnimalDto animalDto) {
@@ -130,39 +165,14 @@ public class UserAnimalMapper {
         }
 
         AnimalEntity animalEntity = new AnimalEntity();
-        animalEntity.setId(animalDto.getId());
-        animalEntity.setName(animalDto.getName());
-        animalEntity.setSpecies(animalDto.getSpecies());
-        animalEntity.setAge(animalDto.getAge());
-        animalEntity.setCage(cageDtoToCageEntity(animalDto.getCage()));
-        animalEntity.setHealth(healthDtoToHealthEntity(animalDto.getHealth()));
+
+        animalEntity.setId(animalDto.id());
+        animalEntity.setName(animalDto.name());
+        animalEntity.setSpecies(animalDto.species());
+        animalEntity.setAge(animalDto.age());
+        animalEntity.setCage(cageDtoToCageEntity(animalDto.cage()));
+        animalEntity.setHealth(healthDtoToHealthEntity(animalDto.health()));
 
         return animalEntity;
-    }
-
-    protected CageDto cageEntityToCageDto(CageEntity cageEntity) {
-        if (cageEntity == null) {
-            return null;
-        }
-
-        CageDto cageDto = new CageDto();
-        cageDto.setId(cageEntity.getId());
-        cageDto.setCageNumber(cageEntity.getCageNumber());
-        cageDto.setAvailability(cageEntity.getAvailability());
-
-        return cageDto;
-    }
-
-    protected HealthDto healthEntityToHealthDto(HealthEntity healthEntity) {
-        if (healthEntity == null) {
-            return null;
-        }
-
-        HealthDto healthDto = new HealthDto();
-        healthDto.setId(healthEntity.getId());
-        healthDto.setStatus(healthEntity.getStatus());
-        healthDto.setUpdateDate(healthEntity.getUpdateDate());
-
-        return healthDto;
     }
 }

@@ -6,9 +6,7 @@ import com.animalmanagementsystem.shelter.dtos.UserRoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
 import com.animalmanagementsystem.shelter.entities.UserRoleEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserRoleMapper {
 
     public UserRoleDto mapEntityToDto(UserRoleEntity entity) {
@@ -16,17 +14,15 @@ public class UserRoleMapper {
             return null;
         }
 
+        Long id = null;
         UserDto users = null;
         RoleDto roles = null;
 
+        id = entity.getId();
         users = userEntityToUserDto(entity.getUsers());
         roles = roleEntityToRoleDto(entity.getRoles());
 
-        UserRoleDto userRoleDto = new UserRoleDto(users, roles);
-
-        userRoleDto.setId(entity.getId());
-
-        return userRoleDto;
+        return new UserRoleDto(id, users, roles);
     }
 
     public UserRoleEntity mapDtoToEntity(UserRoleDto dto) {
@@ -36,9 +32,9 @@ public class UserRoleMapper {
 
         UserRoleEntity userRoleEntity = new UserRoleEntity();
 
-        userRoleEntity.setId(dto.getId());
-        userRoleEntity.setUsers(userDtoToUserEntity(dto.getUsers()));
-        userRoleEntity.setRoles(roleDtoToRoleEntity(dto.getRoles()));
+        userRoleEntity.setId(dto.id());
+        userRoleEntity.setUsers(userDtoToUserEntity(dto.users()));
+        userRoleEntity.setRoles(roleDtoToRoleEntity(dto.roles()));
 
         return userRoleEntity;
     }
@@ -48,16 +44,21 @@ public class UserRoleMapper {
             return null;
         }
 
-        UserDto userDto = new UserDto();
+        Long id = null;
+        String email = null;
+        String password = null;
+        String firstName = null;
+        String lastName = null;
+        String phoneNumber = null;
 
-        userDto.setId(userEntity.getId());
-        userDto.setEmail(userEntity.getEmail());
-        userDto.setPassword(userEntity.getPassword());
-        userDto.setFirstName(userEntity.getFirstName());
-        userDto.setLastName(userEntity.getLastName());
-        userDto.setPhoneNumber(userEntity.getPhoneNumber());
+        id = userEntity.getId();
+        email = userEntity.getEmail();
+        password = userEntity.getPassword();
+        firstName = userEntity.getFirstName();
+        lastName = userEntity.getLastName();
+        phoneNumber = userEntity.getPhoneNumber();
 
-        return userDto;
+        return new UserDto(id, email, password, firstName, lastName, phoneNumber);
     }
 
     protected RoleDto roleEntityToRoleDto(RoleEntity roleEntity) {
@@ -65,13 +66,15 @@ public class UserRoleMapper {
             return null;
         }
 
-        RoleDto roleDto = new RoleDto();
+        Long id = null;
+        String name = null;
+        String description = null;
 
-        roleDto.setId(roleEntity.getId());
-        roleDto.setName(roleEntity.getName());
-        roleDto.setDescription(roleEntity.getDescription());
+        id = roleEntity.getId();
+        name = roleEntity.getName();
+        description = roleEntity.getDescription();
 
-        return roleDto;
+        return new RoleDto(id, name, description);
     }
 
     protected UserEntity userDtoToUserEntity(UserDto userDto) {
@@ -81,12 +84,12 @@ public class UserRoleMapper {
 
         UserEntity userEntity = new UserEntity();
 
-        userEntity.setId(userDto.getId());
-        userEntity.setEmail(userDto.getEmail());
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setFirstName(userDto.getFirstName());
-        userEntity.setLastName(userDto.getLastName());
-        userEntity.setPhoneNumber(userDto.getPhoneNumber());
+        userEntity.setId(userDto.id());
+        userEntity.setEmail(userDto.email());
+        userEntity.setPassword(userDto.password());
+        userEntity.setFirstName(userDto.firstName());
+        userEntity.setLastName(userDto.lastName());
+        userEntity.setPhoneNumber(userDto.phoneNumber());
 
         return userEntity;
     }
@@ -98,9 +101,9 @@ public class UserRoleMapper {
 
         RoleEntity roleEntity = new RoleEntity();
 
-        roleEntity.setId(roleDto.getId());
-        roleEntity.setName(roleDto.getName());
-        roleEntity.setDescription(roleDto.getDescription());
+        roleEntity.setId(roleDto.id());
+        roleEntity.setName(roleDto.name());
+        roleEntity.setDescription(roleDto.description());
 
         return roleEntity;
     }

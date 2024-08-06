@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto updateRole(RoleDto roleDto, Long id) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
-        Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.getId());
+        Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
         if (optionalRoleEntity.isEmpty()) {
             throw new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE);
         }

@@ -48,7 +48,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public AnimalDto updateAnimal(AnimalDto animalDto, Long id) {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
-        Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.getId());
+        Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.id());
         if (optionalAnimalEntity.isEmpty()) {
             throw new EntityNotFoundException(ANIMAL_NOT_FOUND_MESSAGE);
         }
