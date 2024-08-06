@@ -48,7 +48,7 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public HealthDto updateHealth(HealthDto healthDto, Long id) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
-        Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.getId());
+        Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
         if (optionalHealthEntity.isEmpty()) {
             throw new EntityNotFoundException(HEALTH_NOT_FOUND_MESSAGE);
         }

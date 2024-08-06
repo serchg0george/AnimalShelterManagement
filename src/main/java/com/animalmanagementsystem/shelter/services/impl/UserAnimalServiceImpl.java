@@ -48,7 +48,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     @Override
     public UserAnimalDto updateUserAnimal(UserAnimalDto userAnimalDto, Long id) {
         UserAnimalEntity userAnimalEntity = userAnimalMapper.mapDtoToEntity(userAnimalDto);
-        Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(userAnimalDto.getId());
+        Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(userAnimalDto.id());
         if (optionalUserAnimalEntity.isEmpty()) {
             throw new EntityNotFoundException(USER_ANIMAL_NOT_FOUND);
         }

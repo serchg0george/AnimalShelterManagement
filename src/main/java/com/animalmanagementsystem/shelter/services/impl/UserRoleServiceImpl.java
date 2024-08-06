@@ -48,7 +48,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRoleDto updateUserRole(UserRoleDto userRoleDto, Long id) {
         UserRoleEntity userRoleEntity = userRoleMapper.mapDtoToEntity(userRoleDto);
-        Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(userRoleDto.getId());
+        Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(userRoleDto.id());
         if (optionalUserRoleEntity.isEmpty()) {
             throw new EntityNotFoundException(USER_ROLE_NOT_FOUND_MESSAGE);
         }

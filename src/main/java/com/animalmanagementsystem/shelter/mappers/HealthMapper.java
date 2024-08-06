@@ -2,9 +2,7 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class HealthMapper {
 
     public HealthDto mapEntityToDto(HealthEntity entity) {
@@ -12,13 +10,15 @@ public class HealthMapper {
             return null;
         }
 
-        HealthDto healthDto = new HealthDto();
+        Long id = null;
+        String status = null;
 
-        healthDto.setId(entity.getId());
-        healthDto.setStatus(entity.getStatus());
-        healthDto.setUpdateDate(entity.getUpdateDate());
+        id = entity.getId();
+        status = entity.getStatus();
 
-        return healthDto;
+        String availability = null;
+
+        return new HealthDto(id, status, availability);
     }
 
     public HealthEntity mapDtoToEntity(HealthDto dto) {
@@ -28,9 +28,8 @@ public class HealthMapper {
 
         HealthEntity healthEntity = new HealthEntity();
 
-        healthEntity.setId(dto.getId());
-        healthEntity.setStatus(dto.getStatus());
-        healthEntity.setUpdateDate(dto.getUpdateDate());
+        healthEntity.setId(dto.id());
+        healthEntity.setStatus(dto.status());
 
         return healthEntity;
     }
