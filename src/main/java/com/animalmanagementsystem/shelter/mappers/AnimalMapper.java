@@ -7,10 +7,12 @@ import com.animalmanagementsystem.shelter.dtos.UserAnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class AnimalMapper {
 
     public AnimalDto mapEntityToDto(AnimalEntity entity) {

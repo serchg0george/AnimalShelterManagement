@@ -2,10 +2,12 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.*;
 import com.animalmanagementsystem.shelter.entities.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class UserAnimalMapper {
 
     public UserAnimalDto mapEntityToDto(UserAnimalEntity entity) {
