@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto, Long id) {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.getId());
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
         if (optionalUserEntity.isEmpty()) {
             throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE);
         }

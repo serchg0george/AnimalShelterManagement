@@ -2,9 +2,7 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RoleMapper {
 
     public RoleDto mapEntityToDto(RoleEntity entity) {
@@ -12,13 +10,15 @@ public class RoleMapper {
             return null;
         }
 
-        RoleDto roleDto = new RoleDto();
+        Long id = null;
+        String name = null;
+        String description = null;
 
-        roleDto.setId(entity.getId());
-        roleDto.setName(entity.getName());
-        roleDto.setDescription(entity.getDescription());
+        id = entity.getId();
+        name = entity.getName();
+        description = entity.getDescription();
 
-        return roleDto;
+        return new RoleDto(id, name, description);
     }
 
     public RoleEntity mapDtoToEntity(RoleDto dto) {
@@ -28,9 +28,9 @@ public class RoleMapper {
 
         RoleEntity roleEntity = new RoleEntity();
 
-        roleEntity.setId(dto.getId());
-        roleEntity.setName(dto.getName());
-        roleEntity.setDescription(dto.getDescription());
+        roleEntity.setId(dto.id());
+        roleEntity.setName(dto.name());
+        roleEntity.setDescription(dto.description());
 
         return roleEntity;
     }

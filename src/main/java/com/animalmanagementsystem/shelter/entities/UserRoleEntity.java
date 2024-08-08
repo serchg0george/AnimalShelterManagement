@@ -1,19 +1,16 @@
 package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "t_user_role")
 public class UserRoleEntity extends BaseEntity {
 
-    @ManyToOne(cascade = {CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.DETACH}, fetch = FetchType.LAZY)
     UserEntity users;
 
-    @ManyToOne(cascade = {CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.DETACH}, fetch = FetchType.LAZY)
     RoleEntity roles;
 
     public UserRoleEntity() {

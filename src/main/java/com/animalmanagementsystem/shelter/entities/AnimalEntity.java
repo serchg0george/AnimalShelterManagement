@@ -18,13 +18,13 @@ public class AnimalEntity extends BaseEntity {
     @Column(name = "age")
     private Integer age;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     CageEntity cage;
 
     @OneToMany(mappedBy = "animals")
     List<UserAnimalEntity> users;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     HealthEntity health;
 
     public AnimalEntity() {

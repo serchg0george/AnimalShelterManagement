@@ -2,9 +2,7 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserMapper {
 
     public UserDto mapEntityToDto(UserEntity entity) {
@@ -12,16 +10,21 @@ public class UserMapper {
             return null;
         }
 
-        UserDto userDto = new UserDto();
+        Long id = null;
+        String email = null;
+        String password = null;
+        String firstName = null;
+        String lastName = null;
+        String phoneNumber = null;
 
-        userDto.setId(entity.getId());
-        userDto.setEmail(entity.getEmail());
-        userDto.setPassword(entity.getPassword());
-        userDto.setFirstName(entity.getFirstName());
-        userDto.setLastName(entity.getLastName());
-        userDto.setPhoneNumber(entity.getPhoneNumber());
+        id = entity.getId();
+        email = entity.getEmail();
+        password = entity.getPassword();
+        firstName = entity.getFirstName();
+        lastName = entity.getLastName();
+        phoneNumber = entity.getPhoneNumber();
 
-        return userDto;
+        return new UserDto(id, email, password, firstName, lastName, phoneNumber);
     }
 
     public UserEntity mapDtoToEntity(UserDto dto) {
@@ -31,12 +34,12 @@ public class UserMapper {
 
         UserEntity userEntity = new UserEntity();
 
-        userEntity.setId(dto.getId());
-        userEntity.setEmail(dto.getEmail());
-        userEntity.setPassword(dto.getPassword());
-        userEntity.setFirstName(dto.getFirstName());
-        userEntity.setLastName(dto.getLastName());
-        userEntity.setPhoneNumber(dto.getPhoneNumber());
+        userEntity.setId(dto.id());
+        userEntity.setEmail(dto.email());
+        userEntity.setPassword(dto.password());
+        userEntity.setFirstName(dto.firstName());
+        userEntity.setLastName(dto.lastName());
+        userEntity.setPhoneNumber(dto.phoneNumber());
 
         return userEntity;
     }
