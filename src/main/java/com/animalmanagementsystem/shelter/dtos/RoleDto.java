@@ -1,6 +1,9 @@
 package com.animalmanagementsystem.shelter.dtos;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public record RoleDto(Long id,
-                      String name,
-                      String description) {
+                      @NotBlank @Size(max = 150) String name,
+                      @NotBlank @Size(max = 200) String description) {
 }
