@@ -8,6 +8,7 @@ import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public class AnimalMapper {
@@ -80,9 +81,9 @@ public class AnimalMapper {
         id = healthEntity.getId();
         status = healthEntity.getStatus();
 
-        String availability = null;
+        Date updateDate = null;
 
-        return new HealthDto(id, status, availability);
+        return new HealthDto(id, status, updateDate);
     }
 
     protected CageEntity cageDtoToCageEntity(CageDto cageDto) {

@@ -3,6 +3,8 @@ package com.animalmanagementsystem.shelter.mappers;
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 
+import java.util.Date;
+
 public class HealthMapper {
 
     public HealthDto mapEntityToDto(HealthEntity entity) {
@@ -16,9 +18,9 @@ public class HealthMapper {
         id = entity.getId();
         status = entity.getStatus();
 
-        String availability = null;
+        Date updateDate = null;
 
-        return new HealthDto(id, status, availability);
+        return new HealthDto(id, status, updateDate);
     }
 
     public HealthEntity mapDtoToEntity(HealthDto dto) {
