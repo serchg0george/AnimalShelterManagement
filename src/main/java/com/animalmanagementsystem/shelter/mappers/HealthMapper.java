@@ -16,11 +16,11 @@ public class HealthMapper {
 
         Long id = null;
         String status = null;
+        Date updateDate = null;
 
         id = entity.getId();
         status = entity.getStatus();
-
-        Date updateDate = null;
+        updateDate = entity.getUpdateDate();
 
         return new HealthDto(id, status, updateDate);
     }
@@ -34,6 +34,7 @@ public class HealthMapper {
 
         healthEntity.setId(dto.id());
         healthEntity.setStatus(dto.status());
+        healthEntity.setUpdateDate(dto.updateDate());
 
         return healthEntity;
     }

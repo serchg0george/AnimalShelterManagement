@@ -79,11 +79,12 @@ public class AnimalMapper {
 
         Long id = null;
         String status = null;
+        Date updateDate = null;
 
         id = healthEntity.getId();
         status = healthEntity.getStatus();
+        updateDate = healthEntity.getUpdateDate();
 
-        Date updateDate = null;
 
         return new HealthDto(id, status, updateDate);
     }
@@ -111,6 +112,7 @@ public class AnimalMapper {
 
         healthEntity.setId(healthDto.id());
         healthEntity.setStatus(healthDto.status());
+        healthEntity.setUpdateDate(healthDto.updateDate());
 
         return healthEntity;
     }
