@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.mappers.AnimalMapper;
-import com.animalmanagementsystem.shelter.repository.AnimalRepository;
+import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.searchs.AnimalSearchRequest;
 import com.animalmanagementsystem.shelter.services.AnimalService;
 import jakarta.persistence.EntityManager;

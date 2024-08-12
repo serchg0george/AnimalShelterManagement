@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
 import com.animalmanagementsystem.shelter.mappers.RoleMapper;
-import com.animalmanagementsystem.shelter.repository.RoleRepository;
+import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.services.RoleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;

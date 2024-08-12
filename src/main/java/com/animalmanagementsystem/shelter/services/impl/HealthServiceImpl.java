@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 import com.animalmanagementsystem.shelter.mappers.HealthMapper;
-import com.animalmanagementsystem.shelter.repository.HealthRepository;
+import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
 import jakarta.persistence.EntityManager;

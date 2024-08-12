@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.mappers.CageMapper;
-import com.animalmanagementsystem.shelter.repository.CageRepository;
+import com.animalmanagementsystem.shelter.repositories.CageRepository;
 import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
 import jakarta.persistence.EntityManager;
