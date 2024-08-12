@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.controllers;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
+import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,12 @@ public class RoleController {
 
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<RoleDto>> searchRole(@RequestBody RoleSearchRequest request) {
+        List<RoleDto> roleDtoList = roleService.findRoleByCriteria(request);
+        return ResponseEntity.ok(roleDtoList);
     }
 
     @PostMapping
