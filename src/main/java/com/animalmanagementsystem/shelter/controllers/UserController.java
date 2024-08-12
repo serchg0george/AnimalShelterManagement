@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.controllers;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
+import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,12 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserDto>> searchUser(@RequestBody UserSearchRequest request) {
+        List<UserDto> userDtoList = userService.findUserByCriteria(request);
+        return ResponseEntity.ok(userDtoList);
     }
 
     @PostMapping

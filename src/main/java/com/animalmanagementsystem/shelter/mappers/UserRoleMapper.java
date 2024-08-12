@@ -6,7 +6,9 @@ import com.animalmanagementsystem.shelter.dtos.UserRoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
 import com.animalmanagementsystem.shelter.entities.UserRoleEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserRoleMapper {
 
     public UserRoleDto mapEntityToDto(UserRoleEntity entity) {

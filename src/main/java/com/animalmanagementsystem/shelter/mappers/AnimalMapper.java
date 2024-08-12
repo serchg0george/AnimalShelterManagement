@@ -7,9 +7,12 @@ import com.animalmanagementsystem.shelter.dtos.UserAnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
+@Component
 public class AnimalMapper {
 
     public AnimalDto mapEntityToDto(AnimalEntity entity) {
@@ -76,13 +79,14 @@ public class AnimalMapper {
 
         Long id = null;
         String status = null;
+        Date updateDate = null;
 
         id = healthEntity.getId();
         status = healthEntity.getStatus();
+        updateDate = healthEntity.getUpdateDate();
 
-        String availability = null;
 
-        return new HealthDto(id, status, availability);
+        return new HealthDto(id, status, updateDate);
     }
 
     protected CageEntity cageDtoToCageEntity(CageDto cageDto) {
@@ -108,6 +112,7 @@ public class AnimalMapper {
 
         healthEntity.setId(healthDto.id());
         healthEntity.setStatus(healthDto.status());
+        healthEntity.setUpdateDate(healthDto.updateDate());
 
         return healthEntity;
     }
