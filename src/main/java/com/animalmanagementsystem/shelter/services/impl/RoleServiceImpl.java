@@ -4,10 +4,18 @@ import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
 import com.animalmanagementsystem.shelter.mappers.RoleMapper;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
+import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +24,41 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
+    private final EntityManager entityManager;
     private static final String ROLE_NOT_FOUND_MESSAGE = "Role not found";
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, EntityManager entityManager) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public List<RoleDto> findRoleByCriteria(RoleSearchRequest request) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+        Root<RoleEntity> roleEntityRoot = criteriaQuery.from(RoleEntity.class);
+
+        if (request.name() != null && !request.name().isBlank()) {
+            Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), "%"
+                    + request.name() + "%");
+            predicates.add(namePredicate);
+        } else if (request.description() != null && !request.description().isBlank()) {
+            Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), "%"
+                    + request.description() + "%");
+            predicates.add(descriptionPredicate);
+        }
+
+        criteriaQuery.where(
+                predicates.toArray(new Predicate[0])
+        );
+
+        TypedQuery<RoleEntity> query = entityManager.createQuery(criteriaQuery);
+
+        return query.getResultList().stream()
+                .map(roleMapper::mapEntityToDto)
+                .toList();
     }
 
     @Override
