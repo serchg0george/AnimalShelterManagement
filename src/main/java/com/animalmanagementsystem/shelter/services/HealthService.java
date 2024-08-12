@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.services;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
+import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface HealthService {
     HealthDto updateHealth(HealthDto healthDto, Long id);
 
     void deleteHealth(Long id);
+
+    List<HealthDto> findHealthByCriteria(HealthSearchRequest request);
 }

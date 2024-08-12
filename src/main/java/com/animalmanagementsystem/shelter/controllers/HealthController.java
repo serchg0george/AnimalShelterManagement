@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.controllers;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
+import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,12 @@ public class HealthController {
 
     public HealthController(HealthService healthService) {
         this.healthService = healthService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<HealthDto>> searchHealth(@RequestBody HealthSearchRequest request) {
+        List<HealthDto> healthDtoList = healthService.findHealthByCriteria(request);
+        return ResponseEntity.ok(healthDtoList);
     }
 
     @PostMapping
