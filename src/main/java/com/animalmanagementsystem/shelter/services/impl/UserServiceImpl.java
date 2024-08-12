@@ -44,13 +44,16 @@ public class UserServiceImpl implements UserService {
             Predicate emailPredicate = criteriaBuilder.like(root.get("email"), "%" + request.email() + "%");
             predicates.add(emailPredicate);
         } else if (request.firstName() != null && !request.firstName().isBlank()) {
-            Predicate firstNamePredicate = criteriaBuilder.equal(root.get("firstName"), "%" + request.firstName() + "%");
+            Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), "%"
+                    + request.firstName() + "%");
             predicates.add(firstNamePredicate);
         } else if (request.lastName() != null && !request.lastName().isBlank()) {
-            Predicate lastNamePredicate = criteriaBuilder.equal(root.get("lastName"), "%" + request.lastName() + "%");
+            Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), "%"
+                    + request.lastName() + "%");
             predicates.add(lastNamePredicate);
         } else if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
-            Predicate phoneNumberPredicate = criteriaBuilder.equal(root.get("phoneNumber"), "%" + request.phoneNumber() + "%");
+            Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), "%"
+                    + request.phoneNumber() + "%");
             predicates.add(phoneNumberPredicate);
         }
 
