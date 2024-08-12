@@ -1,6 +1,7 @@
 package com.animalmanagementsystem.shelter.controllers;
 
 import com.animalmanagementsystem.shelter.dtos.CageDto;
+import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,12 @@ public class CageController {
 
     public CageController(CageService cageService) {
         this.cageService = cageService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CageDto>> searchCage(@RequestBody CageSearchRequest request) {
+        List<CageDto> cageDtoList = cageService.findCageByCriteria(request);
+        return ResponseEntity.ok(cageDtoList);
     }
 
     @PostMapping
@@ -35,8 +42,7 @@ public class CageController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateCage(@PathVariable("id") Long id,
-                                             @RequestBody CageDto cageDto) {
+    public ResponseEntity<String> updateCage(@PathVariable("id") Long id, @RequestBody CageDto cageDto) {
         cageService.updateCage(cageDto, id);
         return ResponseEntity.ok("Cage updated");
     }

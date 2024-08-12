@@ -4,10 +4,18 @@ import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.mappers.CageMapper;
 import com.animalmanagementsystem.shelter.repository.CageRepository;
+import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +24,41 @@ public class CageServiceImpl implements CageService {
 
     private final CageRepository cageRepository;
     private final CageMapper cageMapper;
+    private final EntityManager entityManager;
     private static final String CAGE_NOT_FOUND_MESSAGE = "Cage not found";
 
-    public CageServiceImpl(CageRepository cageRepository, CageMapper cageMapper) {
+    public CageServiceImpl(CageRepository cageRepository, CageMapper cageMapper, EntityManager entityManager) {
         this.cageRepository = cageRepository;
         this.cageMapper = cageMapper;
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public List<CageDto> findCageByCriteria(CageSearchRequest request) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CageEntity> criteriaQuery = criteriaBuilder.createQuery(CageEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+        Root<CageEntity> root = criteriaQuery.from(CageEntity.class);
+
+        if (request.cageNumber() != null && !request.cageNumber().isBlank()) {
+            Predicate cagePredicate = criteriaBuilder.like(root.get("cageNumber"), "%"
+                    + request.cageNumber() + "%");
+            predicates.add(cagePredicate);
+        } else if (request.availability() != null && !request.availability().isBlank()) {
+            Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), "%"
+                    + request.availability() + "%");
+            predicates.add(availabilityPredicate);
+        }
+
+        criteriaQuery.where(
+                criteriaBuilder.or(predicates.toArray(new Predicate[0]))
+        );
+
+        TypedQuery<CageEntity> query = entityManager.createQuery(criteriaQuery);
+
+        return query.getResultList().stream()
+                .map(cageMapper::mapEntityToDto)
+                .toList();
     }
 
     @Override
