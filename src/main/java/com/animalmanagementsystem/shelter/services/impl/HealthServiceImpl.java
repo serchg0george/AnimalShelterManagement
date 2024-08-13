@@ -34,8 +34,8 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public List<HealthDto> findHealthByCriteria(HealthSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<HealthDto> findHealthByCriteria(final HealthSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<HealthEntity> criteriaQuery = criteriaBuilder.createQuery(HealthEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<HealthEntity> healthEntityRoot = criteriaQuery.from(HealthEntity.class);

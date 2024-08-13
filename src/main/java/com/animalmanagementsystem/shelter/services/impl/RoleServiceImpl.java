@@ -34,8 +34,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDto> findRoleByCriteria(RoleSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<RoleDto> findRoleByCriteria(final RoleSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<RoleEntity> roleEntityRoot = criteriaQuery.from(RoleEntity.class);

@@ -34,8 +34,8 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
-    public List<CageDto> findCageByCriteria(CageSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<CageDto> findCageByCriteria(final CageSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CageEntity> criteriaQuery = criteriaBuilder.createQuery(CageEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<CageEntity> root = criteriaQuery.from(CageEntity.class);

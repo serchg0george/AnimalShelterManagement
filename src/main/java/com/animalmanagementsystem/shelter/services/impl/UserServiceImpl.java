@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findUserByCriteria(UserSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<UserDto> findUserByCriteria(final UserSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);

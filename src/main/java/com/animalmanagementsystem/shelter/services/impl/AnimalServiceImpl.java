@@ -34,8 +34,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<AnimalDto> findAnimalByCriteria(AnimalSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<AnimalDto> findAnimalByCriteria(final AnimalSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<AnimalEntity> criteriaQuery = criteriaBuilder.createQuery(AnimalEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<AnimalEntity> root = criteriaQuery.from(AnimalEntity.class);
