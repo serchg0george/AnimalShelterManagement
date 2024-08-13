@@ -40,4 +40,19 @@ public class CageEntity extends BaseEntity {
         this.availability = availability;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CageEntity that = (CageEntity) o;
+        return getCageNumber().equals(that.getCageNumber()) && getAvailability().equals(that.getAvailability());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCageNumber().hashCode();
+        result = 31 * result + getAvailability().hashCode();
+        return result;
+    }
 }
