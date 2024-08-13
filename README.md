@@ -13,9 +13,9 @@ Also project contains functionality of search for providet entities using criter
 ![image](https://github.com/user-attachments/assets/a1aa6a0f-4b07-48e8-8f0f-8bdd91071c7b)
 
 ## Using technologies:
-**Spring Boot 3**
-**Spring Data JPA**
-**REST MVC**
-**Criteria API**
-**Maven**
-**Postgresql**
+- **Spring Boot 3**
+- **Spring Data JPA**
+- **REST MVC**
+- **Criteria API**
+- **Maven**
+- **Postgresql**
