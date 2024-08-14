@@ -11,14 +11,14 @@ class CageMapperTest {
     private final CageMapper cageMapper = new CageMapper();
 
     @Test
-    void checkNullEntity() {
+    void checkNullDto() {
         CageDto cageDto = cageMapper.mapEntityToDto(null);
 
         assertNull(cageDto);
     }
 
     @Test
-    void checkNullDto() {
+    void checkNullEntity() {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(null);
 
         assertNull(cageEntity);

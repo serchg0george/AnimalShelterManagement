@@ -84,4 +84,22 @@ public class UserEntity extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity that = (UserEntity) o;
+        return getEmail().equals(that.getEmail()) && getPassword().equals(that.getPassword()) && getFirstName().equals(that.getFirstName()) && getLastName().equals(that.getLastName()) && getPhoneNumber().equals(that.getPhoneNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getEmail().hashCode();
+        result = 31 * result + getPassword().hashCode();
+        result = 31 * result + getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + getPhoneNumber().hashCode();
+        return result;
+    }
 }
