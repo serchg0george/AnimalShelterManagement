@@ -15,6 +15,8 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +66,7 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public HealthDto createHealth(HealthDto healthDto) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
+        healthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         HealthEntity savedHealth = healthRepository.save(healthEntity);
         return healthMapper.mapEntityToDto(savedHealth);
     }
@@ -92,7 +95,7 @@ public class HealthServiceImpl implements HealthService {
         }
         HealthEntity updatedHealthEntity = optionalHealthEntity.get();
         updatedHealthEntity.setStatus(healthEntity.getStatus());
-        updatedHealthEntity.setUpdateDate(healthEntity.getUpdateDate());
+        updatedHealthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         updatedHealthEntity.setId(id);
         return healthMapper.mapEntityToDto(healthRepository.save(updatedHealthEntity));
     }
