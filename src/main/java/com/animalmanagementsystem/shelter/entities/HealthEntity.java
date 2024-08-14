@@ -42,4 +42,19 @@ public class HealthEntity extends BaseEntity {
         this.updateDate = updateDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HealthEntity that = (HealthEntity) o;
+        return getStatus().equals(that.getStatus()) && getUpdateDate().equals(that.getUpdateDate());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getStatus().hashCode();
+        result = 31 * result + getUpdateDate().hashCode();
+        return result;
+    }
 }
