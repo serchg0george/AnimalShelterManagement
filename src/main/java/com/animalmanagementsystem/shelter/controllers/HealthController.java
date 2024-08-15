@@ -3,6 +3,7 @@ package com.animalmanagementsystem.shelter.controllers;
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class HealthController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createHealth(@RequestBody HealthDto healthDto) {
+    public ResponseEntity<String> createHealth(@Valid @RequestBody HealthDto healthDto) {
         healthService.createHealth(healthDto);
         return ResponseEntity.ok("Health created");
     }

@@ -3,6 +3,7 @@ package com.animalmanagementsystem.shelter.controllers;
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createRole(@RequestBody RoleDto roleDto) {
+    public ResponseEntity<String> createRole(@Valid @RequestBody RoleDto roleDto) {
         roleService.createRole(roleDto);
         return ResponseEntity.ok("Role created");
     }

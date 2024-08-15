@@ -3,6 +3,7 @@ package com.animalmanagementsystem.shelter.controllers;
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CageController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCage(@RequestBody CageDto cageDto) {
+    public ResponseEntity<String> createCage(@Valid @RequestBody CageDto cageDto) {
         cageService.createCage(cageDto);
         return ResponseEntity.ok("Cage created");
     }
