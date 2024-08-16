@@ -3,6 +3,7 @@ package com.animalmanagementsystem.shelter.controllers;
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
         userService.createUser(userDto);
         return ResponseEntity.ok("User created");
     }
@@ -43,7 +44,7 @@ public class UserController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateUser(@PathVariable("id") Long id,
-                                             @RequestBody UserDto userDto) {
+                                             @Valid @RequestBody UserDto userDto) {
         userService.updateUser(userDto, id);
         return ResponseEntity.ok("User updated");
     }

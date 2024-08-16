@@ -3,6 +3,7 @@ package com.animalmanagementsystem.shelter.controllers;
 import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.searchs.AnimalSearchRequest;
 import com.animalmanagementsystem.shelter.services.AnimalService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AnimalController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createAnimal(@RequestBody AnimalDto animalDto) {
+    public ResponseEntity<String> createAnimal(@Valid @RequestBody AnimalDto animalDto) {
         animalService.createAnimal(animalDto);
         return ResponseEntity.ok("Animal created");
     }
@@ -42,7 +43,8 @@ public class AnimalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateAnimal(@PathVariable("id") Long id, @RequestBody AnimalDto animalDto) {
+    public ResponseEntity<String> updateAnimal(@PathVariable("id") Long id,
+                                               @Valid @RequestBody AnimalDto animalDto) {
         animalService.updateAnimal(animalDto, id);
         return ResponseEntity.ok("Animal updated");
     }

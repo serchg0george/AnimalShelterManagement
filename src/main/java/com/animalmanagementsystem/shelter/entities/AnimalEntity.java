@@ -87,4 +87,21 @@ public class AnimalEntity extends BaseEntity {
     public void setHealth(HealthEntity health) {
         this.health = health;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnimalEntity that = (AnimalEntity) o;
+        return getName().equals(that.getName()) && getSpecies().equals(that.getSpecies()) && getAge().equals(that.getAge());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getSpecies().hashCode();
+        result = 31 * result + getAge().hashCode();
+        return result;
+    }
 }

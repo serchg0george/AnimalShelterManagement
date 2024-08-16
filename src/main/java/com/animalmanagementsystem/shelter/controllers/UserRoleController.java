@@ -2,6 +2,7 @@ package com.animalmanagementsystem.shelter.controllers;
 
 import com.animalmanagementsystem.shelter.dtos.UserRoleDto;
 import com.animalmanagementsystem.shelter.services.UserRoleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserRoleController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUserRole(@RequestBody UserRoleDto userRoleDto) {
+    public ResponseEntity<String> createUserRole(@Valid @RequestBody UserRoleDto userRoleDto) {
         userRoleService.createUserRole(userRoleDto);
         return ResponseEntity.ok("User Role created");
     }
@@ -36,7 +37,7 @@ public class UserRoleController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateUserRole(@PathVariable("id") Long id,
-                                                 @RequestBody UserRoleDto userRoleDto) {
+                                                 @Valid @RequestBody UserRoleDto userRoleDto) {
         userRoleService.updateUserRole(userRoleDto, id);
         return ResponseEntity.ok("User Role updated");
     }

@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
-import com.animalmanagementsystem.shelter.mappers.HealthMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
@@ -15,6 +15,8 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,19 +25,19 @@ import java.util.Optional;
 public class HealthServiceImpl implements HealthService {
 
     private final HealthRepository healthRepository;
-    private final HealthMapper healthMapper;
+    private final HealthMapperImpl healthMapper;
     private final EntityManager entityManager;
     private static final String HEALTH_NOT_FOUND_MESSAGE = "Health Not Found";
 
-    public HealthServiceImpl(HealthRepository healthRepository, HealthMapper healthMapper, EntityManager entityManager) {
+    public HealthServiceImpl(HealthRepository healthRepository, HealthMapperImpl healthMapper, EntityManager entityManager) {
         this.healthRepository = healthRepository;
         this.healthMapper = healthMapper;
         this.entityManager = entityManager;
     }
 
     @Override
-    public List<HealthDto> findHealthByCriteria(HealthSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<HealthDto> findHealthByCriteria(final HealthSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<HealthEntity> criteriaQuery = criteriaBuilder.createQuery(HealthEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<HealthEntity> healthEntityRoot = criteriaQuery.from(HealthEntity.class);
@@ -64,6 +66,7 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public HealthDto createHealth(HealthDto healthDto) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
+        healthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         HealthEntity savedHealth = healthRepository.save(healthEntity);
         return healthMapper.mapEntityToDto(savedHealth);
     }
@@ -92,7 +95,7 @@ public class HealthServiceImpl implements HealthService {
         }
         HealthEntity updatedHealthEntity = optionalHealthEntity.get();
         updatedHealthEntity.setStatus(healthEntity.getStatus());
-        updatedHealthEntity.setUpdateDate(healthEntity.getUpdateDate());
+        updatedHealthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         updatedHealthEntity.setId(id);
         return healthMapper.mapEntityToDto(healthRepository.save(updatedHealthEntity));
     }

@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
-import com.animalmanagementsystem.shelter.mappers.UserMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
@@ -23,19 +23,19 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserMapperImpl userMapper;
     private final EntityManager entityManager;
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
+    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
     }
 
     @Override
-    public List<UserDto> findUserByCriteria(UserSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    public List<UserDto> findUserByCriteria(final UserSearchRequest request) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);

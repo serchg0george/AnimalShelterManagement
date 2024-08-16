@@ -44,4 +44,19 @@ public class RoleEntity extends BaseEntity {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RoleEntity that = (RoleEntity) o;
+        return getName().equals(that.getName()) && getDescription().equals(that.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getDescription().hashCode();
+        return result;
+    }
 }
