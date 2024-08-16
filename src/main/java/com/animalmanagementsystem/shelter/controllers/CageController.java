@@ -43,7 +43,8 @@ public class CageController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateCage(@PathVariable("id") Long id, @RequestBody CageDto cageDto) {
+    public ResponseEntity<String> updateCage(@PathVariable("id") Long id,
+                                             @Valid @RequestBody CageDto cageDto) {
         cageService.updateCage(cageDto, id);
         return ResponseEntity.ok("Cage updated");
     }

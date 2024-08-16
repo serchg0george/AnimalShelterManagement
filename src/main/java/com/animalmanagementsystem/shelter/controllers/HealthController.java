@@ -43,7 +43,7 @@ public class HealthController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateHealth(@PathVariable("id") Long id,
-                                               @RequestBody HealthDto healthDto) {
+                                               @Valid @RequestBody HealthDto healthDto) {
         healthService.updateHealth(healthDto, id);
         return ResponseEntity.ok("Health updated");
     }

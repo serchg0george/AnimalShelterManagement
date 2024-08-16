@@ -43,7 +43,8 @@ public class AnimalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateAnimal(@PathVariable("id") Long id, @RequestBody AnimalDto animalDto) {
+    public ResponseEntity<String> updateAnimal(@PathVariable("id") Long id,
+                                               @Valid @RequestBody AnimalDto animalDto) {
         animalService.updateAnimal(animalDto, id);
         return ResponseEntity.ok("Animal updated");
     }

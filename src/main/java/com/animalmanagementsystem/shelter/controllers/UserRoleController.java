@@ -37,7 +37,7 @@ public class UserRoleController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateUserRole(@PathVariable("id") Long id,
-                                                 @RequestBody UserRoleDto userRoleDto) {
+                                                 @Valid @RequestBody UserRoleDto userRoleDto) {
         userRoleService.updateUserRole(userRoleDto, id);
         return ResponseEntity.ok("User Role updated");
     }

@@ -44,7 +44,7 @@ public class RoleController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateRole(@PathVariable("id") Long id,
-                                             @RequestBody RoleDto roleDto) {
+                                             @Valid @RequestBody RoleDto roleDto) {
         roleService.updateRole(roleDto, id);
         return ResponseEntity.ok("Role updated");
     }
