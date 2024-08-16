@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
-import com.animalmanagementsystem.shelter.mappers.AnimalMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.searchs.AnimalSearchRequest;
 import com.animalmanagementsystem.shelter.services.AnimalService;
@@ -23,11 +23,11 @@ import java.util.Optional;
 public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
-    private final AnimalMapper animalMapper;
+    private final AnimalMapperImpl animalMapper;
     private final EntityManager entityManager;
     private static final String ANIMAL_NOT_FOUND_MESSAGE = "Animal not found";
 
-    public AnimalServiceImpl(AnimalRepository animalRepository, AnimalMapper animalMapper, EntityManager entityManager) {
+    public AnimalServiceImpl(AnimalRepository animalRepository, AnimalMapperImpl animalMapper, EntityManager entityManager) {
         this.animalRepository = animalRepository;
         this.animalMapper = animalMapper;
         this.entityManager = entityManager;

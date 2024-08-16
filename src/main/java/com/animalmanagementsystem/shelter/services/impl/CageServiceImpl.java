@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
-import com.animalmanagementsystem.shelter.mappers.CageMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.CageMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.CageRepository;
 import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
@@ -23,11 +23,11 @@ import java.util.Optional;
 public class CageServiceImpl implements CageService {
 
     private final CageRepository cageRepository;
-    private final CageMapper cageMapper;
+    private final CageMapperImpl cageMapper;
     private final EntityManager entityManager;
     private static final String CAGE_NOT_FOUND_MESSAGE = "Cage not found";
 
-    public CageServiceImpl(CageRepository cageRepository, CageMapper cageMapper, EntityManager entityManager) {
+    public CageServiceImpl(CageRepository cageRepository, CageMapperImpl cageMapper, EntityManager entityManager) {
         this.cageRepository = cageRepository;
         this.cageMapper = cageMapper;
         this.entityManager = entityManager;
