@@ -2,13 +2,14 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
+import com.animalmanagementsystem.shelter.mappers.impl.CageMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CageMapperTest {
-    private final CageMapper cageMapper = new CageMapper();
+    private final CageMapper cageMapper = new CageMapperImpl();
 
     @Test
     void checkNullDto() {

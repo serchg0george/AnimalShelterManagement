@@ -2,13 +2,14 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
+import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RoleMapperTest {
-    private final RoleMapper roleMapper = new RoleMapper();
+    private final RoleMapper roleMapper = new RoleMapperImpl();
 
     @Test
     void checkNullDto() {

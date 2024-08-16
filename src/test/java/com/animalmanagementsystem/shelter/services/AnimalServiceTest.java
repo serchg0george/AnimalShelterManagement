@@ -4,9 +4,9 @@ import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
-import com.animalmanagementsystem.shelter.mappers.AnimalMapper;
 import com.animalmanagementsystem.shelter.mappers.CageMapper;
-import com.animalmanagementsystem.shelter.mappers.HealthMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.services.impl.AnimalServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,13 +34,13 @@ class AnimalServiceTest {
     private AnimalRepository animalRepository;
 
     @Mock
-    private AnimalMapper animalMapper;
+    private AnimalMapperImpl animalMapper;
 
     @Mock
     private CageMapper cageMapper;
 
     @Mock
-    private HealthMapper healthMapper;
+    private HealthMapperImpl healthMapper;
 
     @InjectMocks
     private AnimalServiceImpl animalService;

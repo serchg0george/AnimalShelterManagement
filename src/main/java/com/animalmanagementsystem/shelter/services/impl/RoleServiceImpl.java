@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
-import com.animalmanagementsystem.shelter.mappers.RoleMapper;
+import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
@@ -23,11 +23,11 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleMapper roleMapper;
+    private final RoleMapperImpl roleMapper;
     private final EntityManager entityManager;
     private static final String ROLE_NOT_FOUND_MESSAGE = "Role not found";
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, EntityManager entityManager) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMapperImpl roleMapper, EntityManager entityManager) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.entityManager = entityManager;

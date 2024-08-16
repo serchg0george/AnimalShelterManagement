@@ -2,13 +2,14 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
+import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserMapperTest {
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = new UserMapperImpl();
 
     @Test
     void checkNullDto() {

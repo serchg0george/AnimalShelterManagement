@@ -2,6 +2,7 @@ package com.animalmanagementsystem.shelter.mappers;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HealthMapperTest {
-    private final HealthMapper healthMapper = new HealthMapper();
+    private final HealthMapper healthMapper = new HealthMapperImpl();
 
     @Test
     void checkNullDto() {
