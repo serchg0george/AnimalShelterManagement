@@ -2,12 +2,12 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
+import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.searchs.AnimalSearchRequest;
 import com.animalmanagementsystem.shelter.services.AnimalService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -26,7 +26,6 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalMapperImpl animalMapper;
     private final EntityManager entityManager;
-    private static final String ANIMAL_NOT_FOUND_MESSAGE = "Animal not found";
 
     public AnimalServiceImpl(AnimalRepository animalRepository, AnimalMapperImpl animalMapper, EntityManager entityManager) {
         this.animalRepository = animalRepository;
@@ -69,7 +68,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public AnimalDto getAnimalById(Long id) {
-        return animalRepository.findById(id).map(animalMapper::mapEntityToDto).orElseThrow(() -> new EntityNotFoundException(ANIMAL_NOT_FOUND_MESSAGE));
+        return animalRepository.findById(id).map(animalMapper::mapEntityToDto).orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -84,7 +83,7 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.id());
         if (optionalAnimalEntity.isEmpty()) {
-            throw new EntityNotFoundException(ANIMAL_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         AnimalEntity updatedAnimalEntity = optionalAnimalEntity.get();
         updatedAnimalEntity.setName(animalEntity.getName());
@@ -101,7 +100,7 @@ public class AnimalServiceImpl implements AnimalService {
     public void deleteAnimal(Long id) {
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(id);
         if (optionalAnimalEntity.isEmpty()) {
-            throw new EntityNotFoundException(ANIMAL_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         animalRepository.deleteById(id);
     }

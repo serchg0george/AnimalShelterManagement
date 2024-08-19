@@ -2,12 +2,12 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
+import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.CageMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.CageRepository;
 import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.CageService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -26,7 +26,6 @@ public class CageServiceImpl implements CageService {
     private final CageRepository cageRepository;
     private final CageMapperImpl cageMapper;
     private final EntityManager entityManager;
-    private static final String CAGE_NOT_FOUND_MESSAGE = "Cage not found";
 
     public CageServiceImpl(CageRepository cageRepository, CageMapperImpl cageMapper, EntityManager entityManager) {
         this.cageRepository = cageRepository;
@@ -74,7 +73,7 @@ public class CageServiceImpl implements CageService {
     public CageDto getCageById(Long id) {
         return cageRepository.findById(id)
                 .map(cageMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(CAGE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -91,7 +90,7 @@ public class CageServiceImpl implements CageService {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDto);
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(cageDto.id());
         if (optionalCageEntity.isEmpty()) {
-            throw new EntityNotFoundException(CAGE_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         CageEntity updatedCageEntity = optionalCageEntity.get();
         updatedCageEntity.setCageNumber(cageEntity.getCageNumber());
@@ -105,7 +104,7 @@ public class CageServiceImpl implements CageService {
     public void deleteCage(Long id) {
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(id);
         if (optionalCageEntity.isEmpty()) {
-            throw new EntityNotFoundException(CAGE_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         cageRepository.deleteById(id);
     }
