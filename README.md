@@ -3,7 +3,8 @@
 ## Description
 This project represents an animal shelter management system which allows us to make a create,
 update, delete and read operations for all our entities such as animal, health, cage, user, role.
-Also project contains functionality of search for providet entities using criteria API.
+The project have a Global exception handler which allow to us to handle not found exceptions.
+Also project contains functionality of search for provided entities using criteria API.
 
 
 ## Schema of the project:
@@ -19,3 +20,4 @@ Also project contains functionality of search for providet entities using criter
 - **Criteria API**
 - **Maven**
 - **Postgresql**
+- **Global Exception Handling**
