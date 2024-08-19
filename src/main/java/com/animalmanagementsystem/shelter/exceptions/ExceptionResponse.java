@@ -1,25 +1,13 @@
 package com.animalmanagementsystem.shelter.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.http.HttpStatus;
+
 import java.time.LocalDateTime;
 
-public class ExceptionResponse {
+public record ExceptionResponse(HttpStatus status, String message,
 
-    private String message;
-    private LocalDateTime dateTime;
+                                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+                                LocalDateTime dateTime) {
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
 }
