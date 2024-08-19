@@ -12,9 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     ResponseEntity<Object> handleNotFoundException(NotFoundException exception) {
-        ExceptionResponse response = new ExceptionResponse();
-        response.setDateTime(LocalDateTime.now());
-        response.setMessage(exception.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND, exception.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(response, response.status());
     }
 }
