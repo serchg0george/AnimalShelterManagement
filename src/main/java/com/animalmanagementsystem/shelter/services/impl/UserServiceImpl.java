@@ -2,12 +2,12 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
+import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapperImpl userMapper;
     private final EntityManager entityManager;
-    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
     public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -99,7 +98,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
         if (optionalUserEntity.isEmpty()) {
-            throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
 
         UserEntity updatedUserEntity = optionalUserEntity.get();
@@ -117,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
         if (optionalUserEntity.isEmpty()) {
-            throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         userRepository.deleteById(id);
     }

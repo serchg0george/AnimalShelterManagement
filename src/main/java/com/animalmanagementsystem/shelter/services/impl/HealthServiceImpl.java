@@ -2,12 +2,12 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -28,7 +28,6 @@ public class HealthServiceImpl implements HealthService {
     private final HealthRepository healthRepository;
     private final HealthMapperImpl healthMapper;
     private final EntityManager entityManager;
-    private static final String HEALTH_NOT_FOUND_MESSAGE = "Health Not Found";
 
     public HealthServiceImpl(HealthRepository healthRepository, HealthMapperImpl healthMapper, EntityManager entityManager) {
         this.healthRepository = healthRepository;
@@ -77,7 +76,7 @@ public class HealthServiceImpl implements HealthService {
     public HealthDto getHealthById(Long id) {
         return healthRepository.findById(id)
                 .map(healthMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(HEALTH_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -94,7 +93,7 @@ public class HealthServiceImpl implements HealthService {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
         if (optionalHealthEntity.isEmpty()) {
-            throw new EntityNotFoundException(HEALTH_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         HealthEntity updatedHealthEntity = optionalHealthEntity.get();
         updatedHealthEntity.setStatus(healthEntity.getStatus());
@@ -108,7 +107,7 @@ public class HealthServiceImpl implements HealthService {
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
         if (optionalHealthEntity.isEmpty()) {
-            throw new EntityNotFoundException(HEALTH_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         healthRepository.deleteById(id);
     }

@@ -2,12 +2,12 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
+import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -26,7 +26,6 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapperImpl roleMapper;
     private final EntityManager entityManager;
-    private static final String ROLE_NOT_FOUND_MESSAGE = "Role not found";
 
     public RoleServiceImpl(RoleRepository roleRepository, RoleMapperImpl roleMapper, EntityManager entityManager) {
         this.roleRepository = roleRepository;
@@ -74,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto getRoleById(Long id) {
         return roleRepository.findById(id)
                 .map(roleMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -91,7 +90,7 @@ public class RoleServiceImpl implements RoleService {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
         if (optionalRoleEntity.isEmpty()) {
-            throw new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
 
         RoleEntity updatedRoleEntity = optionalRoleEntity.get();
@@ -107,7 +106,7 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
         if (optionalRoleEntity.isEmpty()) {
-            throw new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE);
+            throw new NotFoundException(id);
         }
         roleRepository.deleteById(id);
     }
