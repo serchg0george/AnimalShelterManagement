@@ -13,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
+    @Transactional
     public AnimalDto createAnimal(AnimalDto animalDto) {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         AnimalEntity savedAnimal = animalRepository.save(animalEntity);
@@ -77,6 +79,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
+    @Transactional
     public AnimalDto updateAnimal(AnimalDto animalDto, Long id) {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.id());
@@ -94,6 +97,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
+    @Transactional
     public void deleteAnimal(Long id) {
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(id);
         if (optionalAnimalEntity.isEmpty()) {

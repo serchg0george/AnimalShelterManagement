@@ -6,6 +6,7 @@ import com.animalmanagementsystem.shelter.mappers.impl.UserAnimalMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserAnimalRepository;
 import com.animalmanagementsystem.shelter.services.UserAnimalService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     }
 
     @Override
+    @Transactional
     public UserAnimalDto createUserAnimal(UserAnimalDto userAnimalDto) {
         UserAnimalEntity userAnimalEntity = userAnimalMapper.mapDtoToEntity(userAnimalDto);
         UserAnimalEntity savedUserAnimal = userAnimalRepository.save(userAnimalEntity);
@@ -46,6 +48,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     }
 
     @Override
+    @Transactional
     public UserAnimalDto updateUserAnimal(UserAnimalDto userAnimalDto, Long id) {
         UserAnimalEntity userAnimalEntity = userAnimalMapper.mapDtoToEntity(userAnimalDto);
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(userAnimalDto.id());
@@ -61,6 +64,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     }
 
     @Override
+    @Transactional
     public void deleteUserAnimal(Long id) {
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(id);
         if (optionalUserAnimalEntity.isEmpty()) {

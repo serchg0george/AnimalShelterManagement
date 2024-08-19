@@ -13,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto createRole(RoleDto roleDto) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         RoleEntity savedRole = roleRepository.save(roleEntity);
@@ -84,6 +86,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto updateRole(RoleDto roleDto, Long id) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
@@ -100,6 +103,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
         if (optionalRoleEntity.isEmpty()) {

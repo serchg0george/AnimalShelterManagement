@@ -6,6 +6,7 @@ import com.animalmanagementsystem.shelter.mappers.impl.UserRoleMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserRoleRepository;
 import com.animalmanagementsystem.shelter.services.UserRoleService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional
     public UserRoleDto createUserRole(UserRoleDto userRoleDto) {
         UserRoleEntity userRoleEntity = userRoleMapper.mapDtoToEntity(userRoleDto);
         UserRoleEntity savedUserRole = userRoleRepository.save(userRoleEntity);
@@ -46,6 +48,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional
     public UserRoleDto updateUserRole(UserRoleDto userRoleDto, Long id) {
         UserRoleEntity userRoleEntity = userRoleMapper.mapDtoToEntity(userRoleDto);
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(userRoleDto.id());
@@ -61,6 +64,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional
     public void deleteUserRole(Long id) {
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(id);
         if (optionalUserRoleEntity.isEmpty()) {

@@ -13,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
+    @Transactional
     public CageDto createCage(CageDto cageDtoR) {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDtoR);
         CageEntity savedCage = cageRepository.save(cageEntity);
@@ -84,6 +86,7 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
+    @Transactional
     public CageDto updateCage(CageDto cageDto, Long id) {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDto);
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(cageDto.id());
@@ -98,6 +101,7 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
+    @Transactional
     public void deleteCage(Long id) {
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(id);
         if (optionalCageEntity.isEmpty()) {

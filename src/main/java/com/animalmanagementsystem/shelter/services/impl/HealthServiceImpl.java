@@ -13,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -64,6 +65,7 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
+    @Transactional
     public HealthDto createHealth(HealthDto healthDto) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         healthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
@@ -87,6 +89,7 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
+    @Transactional
     public HealthDto updateHealth(HealthDto healthDto, Long id) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
@@ -101,6 +104,7 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
+    @Transactional
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
         if (optionalHealthEntity.isEmpty()) {
