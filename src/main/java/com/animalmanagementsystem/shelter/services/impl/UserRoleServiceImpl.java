@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserRoleDto;
 import com.animalmanagementsystem.shelter.entities.UserRoleEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.UserRoleNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.UserRoleMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserRoleRepository;
 import com.animalmanagementsystem.shelter.services.UserRoleService;
@@ -35,7 +35,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public UserRoleDto getUserRoleById(Long id) {
         return userRoleRepository.findById(id)
                 .map(userRoleMapper::mapEntityToDto)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new UserRoleNotFoundException(id));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         UserRoleEntity userRoleEntity = userRoleMapper.mapDtoToEntity(userRoleDto);
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(userRoleDto.id());
         if (optionalUserRoleEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserRoleNotFoundException(id);
         }
 
         UserRoleEntity updatedUserRoleEntity = optionalUserRoleEntity.get();
@@ -67,7 +67,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public void deleteUserRole(Long id) {
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(id);
         if (optionalUserRoleEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserRoleNotFoundException(id);
         }
         userRoleRepository.deleteById(id);
     }

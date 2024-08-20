@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.RoleNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
@@ -73,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto getRoleById(Long id) {
         return roleRepository.findById(id)
                 .map(roleMapper::mapEntityToDto)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class RoleServiceImpl implements RoleService {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
         if (optionalRoleEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new RoleNotFoundException(id);
         }
 
         RoleEntity updatedRoleEntity = optionalRoleEntity.get();
@@ -106,7 +106,7 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
         if (optionalRoleEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new RoleNotFoundException(id);
         }
         roleRepository.deleteById(id);
     }

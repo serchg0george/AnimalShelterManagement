@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.UserNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::mapEntityToDto)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
         if (optionalUserEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserNotFoundException(id);
         }
 
         UserEntity updatedUserEntity = optionalUserEntity.get();
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
         if (optionalUserEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
     }

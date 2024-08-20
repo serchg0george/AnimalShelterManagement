@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.AnimalNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.searchs.AnimalSearchRequest;
@@ -68,7 +68,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public AnimalDto getAnimalById(Long id) {
-        return animalRepository.findById(id).map(animalMapper::mapEntityToDto).orElseThrow(() -> new NotFoundException(id));
+        return animalRepository.findById(id).map(animalMapper::mapEntityToDto)
+                .orElseThrow(() -> new AnimalNotFoundException(id));
     }
 
     @Override
@@ -83,7 +84,7 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.id());
         if (optionalAnimalEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new AnimalNotFoundException(id);
         }
         AnimalEntity updatedAnimalEntity = optionalAnimalEntity.get();
         updatedAnimalEntity.setName(animalEntity.getName());
@@ -100,7 +101,7 @@ public class AnimalServiceImpl implements AnimalService {
     public void deleteAnimal(Long id) {
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(id);
         if (optionalAnimalEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new AnimalNotFoundException(id);
         }
         animalRepository.deleteById(id);
     }

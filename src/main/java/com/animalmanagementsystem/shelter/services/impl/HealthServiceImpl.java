@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.HealthNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
@@ -76,7 +76,7 @@ public class HealthServiceImpl implements HealthService {
     public HealthDto getHealthById(Long id) {
         return healthRepository.findById(id)
                 .map(healthMapper::mapEntityToDto)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new HealthNotFoundException(id));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class HealthServiceImpl implements HealthService {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
         if (optionalHealthEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new HealthNotFoundException(id);
         }
         HealthEntity updatedHealthEntity = optionalHealthEntity.get();
         updatedHealthEntity.setStatus(healthEntity.getStatus());
@@ -107,7 +107,7 @@ public class HealthServiceImpl implements HealthService {
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
         if (optionalHealthEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new HealthNotFoundException(id);
         }
         healthRepository.deleteById(id);
     }

@@ -2,7 +2,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserAnimalDto;
 import com.animalmanagementsystem.shelter.entities.UserAnimalEntity;
-import com.animalmanagementsystem.shelter.exceptions.NotFoundException;
+import com.animalmanagementsystem.shelter.exceptions.UserAnimalNotFoundException;
 import com.animalmanagementsystem.shelter.mappers.impl.UserAnimalMapperImpl;
 import com.animalmanagementsystem.shelter.repositories.UserAnimalRepository;
 import com.animalmanagementsystem.shelter.services.UserAnimalService;
@@ -35,7 +35,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     public UserAnimalDto getUserAnimalById(Long id) {
         return userAnimalRepository.findById(id)
                 .map(userAnimalMapper::mapEntityToDto)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new UserAnimalNotFoundException(id));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
         UserAnimalEntity userAnimalEntity = userAnimalMapper.mapDtoToEntity(userAnimalDto);
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(userAnimalDto.id());
         if (optionalUserAnimalEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserAnimalNotFoundException(id);
         }
 
         UserAnimalEntity updatedUserAnimalEntity = optionalUserAnimalEntity.get();
@@ -67,7 +67,7 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     public void deleteUserAnimal(Long id) {
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(id);
         if (optionalUserAnimalEntity.isEmpty()) {
-            throw new NotFoundException(id);
+            throw new UserAnimalNotFoundException(id);
         }
         userAnimalRepository.deleteById(id);
     }
