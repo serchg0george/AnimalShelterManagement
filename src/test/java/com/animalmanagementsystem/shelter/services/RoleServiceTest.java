@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services;
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
 import com.animalmanagementsystem.shelter.exceptions.RoleNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.RoleMapper;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.impl.RoleServiceImpl;
@@ -34,7 +34,7 @@ class RoleServiceTest {
     private RoleRepository roleRepository;
 
     @Mock
-    private RoleMapperImpl roleMapper;
+    private RoleMapper roleMapper;
 
     @Mock
     private EntityManager entityManager;

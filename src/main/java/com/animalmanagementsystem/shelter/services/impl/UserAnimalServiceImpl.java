@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.UserAnimalDto;
 import com.animalmanagementsystem.shelter.entities.UserAnimalEntity;
 import com.animalmanagementsystem.shelter.exceptions.UserAnimalNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.UserAnimalMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.UserAnimalMapper;
 import com.animalmanagementsystem.shelter.repositories.UserAnimalRepository;
 import com.animalmanagementsystem.shelter.services.UserAnimalService;
 import jakarta.transaction.Transactional;
@@ -16,9 +16,9 @@ import java.util.Optional;
 public class UserAnimalServiceImpl implements UserAnimalService {
 
     private final UserAnimalRepository userAnimalRepository;
-    private final UserAnimalMapperImpl userAnimalMapper;
+    private final UserAnimalMapper userAnimalMapper;
 
-    public UserAnimalServiceImpl(UserAnimalRepository userAnimalRepository, UserAnimalMapperImpl userAnimalMapper) {
+    public UserAnimalServiceImpl(UserAnimalRepository userAnimalRepository, UserAnimalMapper userAnimalMapper) {
         this.userAnimalRepository = userAnimalRepository;
         this.userAnimalMapper = userAnimalMapper;
     }

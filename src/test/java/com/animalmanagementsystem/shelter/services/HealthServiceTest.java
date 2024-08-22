@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services;
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 import com.animalmanagementsystem.shelter.exceptions.HealthNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.HealthMapper;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.impl.HealthServiceImpl;
@@ -35,7 +35,7 @@ class HealthServiceTest {
     private HealthRepository healthRepository;
 
     @Mock
-    private HealthMapperImpl healthMapper;
+    private HealthMapper healthMapper;
 
     @Mock
     private EntityManager entityManager;

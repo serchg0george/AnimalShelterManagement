@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
 import com.animalmanagementsystem.shelter.exceptions.UserNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.UserMapper;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
@@ -24,10 +24,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapperImpl userMapper;
+    private final UserMapper userMapper;
     private final EntityManager entityManager;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapper, EntityManager entityManager) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;

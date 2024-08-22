@@ -5,9 +5,9 @@ import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 import com.animalmanagementsystem.shelter.exceptions.AnimalNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.AnimalMapper;
 import com.animalmanagementsystem.shelter.mappers.CageMapper;
-import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
-import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.HealthMapper;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.services.impl.AnimalServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,13 +34,13 @@ class AnimalServiceTest {
     private AnimalRepository animalRepository;
 
     @Mock
-    private AnimalMapperImpl animalMapper;
+    private AnimalMapper animalMapper;
 
     @Mock
     private CageMapper cageMapper;
 
     @Mock
-    private HealthMapperImpl healthMapper;
+    private HealthMapper healthMapper;
 
     @InjectMocks
     private AnimalServiceImpl animalService;

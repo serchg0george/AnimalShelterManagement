@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services.impl;
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
 import com.animalmanagementsystem.shelter.exceptions.HealthNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.HealthMapper;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
 import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.HealthService;
@@ -26,10 +26,10 @@ import java.util.Optional;
 public class HealthServiceImpl implements HealthService {
 
     private final HealthRepository healthRepository;
-    private final HealthMapperImpl healthMapper;
+    private final HealthMapper healthMapper;
     private final EntityManager entityManager;
 
-    public HealthServiceImpl(HealthRepository healthRepository, HealthMapperImpl healthMapper, EntityManager entityManager) {
+    public HealthServiceImpl(HealthRepository healthRepository, HealthMapper healthMapper, EntityManager entityManager) {
         this.healthRepository = healthRepository;
         this.healthMapper = healthMapper;
         this.entityManager = entityManager;
