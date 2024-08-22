@@ -3,7 +3,7 @@ package com.animalmanagementsystem.shelter.services;
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.exceptions.CageNotFoundException;
-import com.animalmanagementsystem.shelter.mappers.impl.CageMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.CageMapper;
 import com.animalmanagementsystem.shelter.repositories.CageRepository;
 import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
 import com.animalmanagementsystem.shelter.services.impl.CageServiceImpl;
@@ -33,7 +33,7 @@ class CageServiceTest {
     private CageRepository cageRepository;
 
     @Mock
-    private CageMapperImpl cageMapper;
+    private CageMapper cageMapper;
 
     @Mock
     private EntityManager entityManager;
