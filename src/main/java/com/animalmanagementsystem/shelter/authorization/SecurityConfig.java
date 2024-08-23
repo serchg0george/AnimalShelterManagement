@@ -41,6 +41,9 @@ public class SecurityConfig {
                     registry.requestMatchers("/api/v1/health/**").hasRole(USER_ROLE);
                     registry.anyRequest().authenticated();
                 })
+                .formLogin(httpSecurityFormLoginConfigurer -> {
+                    httpSecurityFormLoginConfigurer.loginPage("api/v1/login").permitAll();
+                })
                 .build();
     }
 
