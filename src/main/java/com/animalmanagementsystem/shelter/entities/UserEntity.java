@@ -84,6 +84,22 @@ public class UserEntity extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<UserAnimalEntity> getUserAnimalEntity() {
+        return userAnimalEntity;
+    }
+
+    public void setUserAnimalEntity(List<UserAnimalEntity> userAnimalEntity) {
+        this.userAnimalEntity = userAnimalEntity;
+    }
+
+    public List<UserRoleEntity> getUserRoleEntity() {
+        return userRoleEntity;
+    }
+
+    public void setUserRoleEntity(List<UserRoleEntity> userRoleEntity) {
+        this.userRoleEntity = userRoleEntity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
