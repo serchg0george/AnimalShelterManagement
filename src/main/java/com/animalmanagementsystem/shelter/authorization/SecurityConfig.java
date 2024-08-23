@@ -42,7 +42,9 @@ public class SecurityConfig {
                     registry.anyRequest().authenticated();
                 })
                 .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer.loginPage("api/v1/login").permitAll();
+                    httpSecurityFormLoginConfigurer.loginPage("/login")
+                            .successHandler(new AuthorizationSuccesHandler())
+                            .permitAll();
                 })
                 .build();
     }
