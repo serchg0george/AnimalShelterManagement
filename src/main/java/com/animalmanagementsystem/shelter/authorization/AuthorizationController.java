@@ -24,7 +24,7 @@ public class AuthorizationController {
     }
 
     @GetMapping
-    public String login(@RequestParam String email, @RequestParam String password) {
+    public String login(@RequestBody LoginRequest loginRequest) {
         return "Login successful";
     }
 }
