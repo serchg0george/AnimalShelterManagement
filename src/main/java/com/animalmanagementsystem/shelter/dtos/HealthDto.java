@@ -7,5 +7,5 @@ import java.util.Date;
 
 public record HealthDto(Long id,
                         @NotBlank @Size(max = 50) String status,
-                        @NotBlank Date updateDate) {
+                        Date updateDate) {
 }
