@@ -2,91 +2,162 @@ package com.animalmanagementsystem.shelter.services;
 
 import com.animalmanagementsystem.shelter.dtos.HealthDto;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import com.animalmanagementsystem.shelter.exceptions.HealthNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.HealthMapper;
 import com.animalmanagementsystem.shelter.repositories.HealthRepository;
+import com.animalmanagementsystem.shelter.searchs.HealthSearchRequest;
 import com.animalmanagementsystem.shelter.services.impl.HealthServiceImpl;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class HealthServiceTest {
 
-    @Autowired
-    HealthServiceImpl healthService;
+    @Mock
+    private HealthRepository healthRepository;
 
-    @Autowired
-    HealthRepository healthRepository;
+    @Mock
+    private HealthMapper healthMapper;
 
-    @Test
-    void createHealthTest() {
-        HealthDto healthDto = new HealthDto(null, "Healthy", Date.valueOf(LocalDate.now()));
+    @Mock
+    private EntityManager entityManager;
 
-        HealthDto savedHealthDto = healthService.createHealth(healthDto);
+    @InjectMocks
+    private HealthServiceImpl healthService;
 
-        assertThat(savedHealthDto).isNotNull();
-        assertThat(savedHealthDto.status()).isEqualTo("Healthy");
-        assertThat(savedHealthDto.updateDate()).isEqualTo(Date.valueOf(LocalDate.now()));
+    private HealthEntity healthEntity;
+    private HealthDto healthDto;
+
+    @BeforeEach
+    void setUp() {
+        healthEntity = new HealthEntity();
+        healthEntity.setId(1L);
+        healthEntity.setStatus("Healthy");
+        healthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
+
+        healthDto = new HealthDto(1L, "Healthy", Date.valueOf(LocalDate.now()));
     }
 
     @Test
-    void getHealthByIdTest() {
-        HealthEntity healthEntity = new HealthEntity("Sick", Date.valueOf(LocalDate.now()));
-        healthRepository.save(healthEntity);
+    void testCreateHealth() {
+        when(healthMapper.mapDtoToEntity(any(HealthDto.class))).thenReturn(healthEntity);
+        when(healthRepository.save(any(HealthEntity.class))).thenReturn(healthEntity);
+        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
 
-        HealthDto foundHealthDto = healthService.getHealthById(healthEntity.getId());
+        HealthDto createdHealth = healthService.createHealth(healthDto);
 
-        assertThat(foundHealthDto).isNotNull();
-        assertThat(foundHealthDto.status()).isEqualTo("Sick");
-        assertThat(foundHealthDto.updateDate()).isEqualTo(Date.valueOf(LocalDate.now()));
+        assertNotNull(createdHealth);
+        assertEquals(healthDto.id(), createdHealth.id());
+        verify(healthRepository, times(1)).save(any(HealthEntity.class));
     }
 
     @Test
-    void getAllHealthsTest() {
-        HealthEntity healthEntity1 = new HealthEntity("Healthy", Date.valueOf(LocalDate.now()));
-        HealthEntity healthEntity2 = new HealthEntity("Injured", Date.valueOf(LocalDate.now()));
+    void testGetHealthById_HealthExists() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.of(healthEntity));
+        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
 
-        healthRepository.save(healthEntity1);
-        healthRepository.save(healthEntity2);
+        HealthDto foundHealth = healthService.getHealthById(1L);
 
-        List<HealthDto> allHealths = healthService.getAllHealths();
-
-        assertThat(allHealths).isNotNull();
-        assertThat(allHealths)
-                .hasSizeGreaterThanOrEqualTo(2)
-                .extracting("status").contains("Healthy", "Injured");
+        assertNotNull(foundHealth);
+        assertEquals(1L, foundHealth.id());
+        verify(healthRepository, times(1)).findById(1L);
     }
 
     @Test
-    void updateHealthTest() {
-        HealthEntity healthEntity = new HealthEntity("Injured", Date.valueOf(LocalDate.now()));
-        healthRepository.save(healthEntity);
+    void testGetHealthById_HealthNotFound() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.empty());
 
-        HealthDto updateHealthDto = new HealthDto(healthEntity.getId(), "Recovered", Date.valueOf(LocalDate.now()));
-
-        HealthDto updatedHealthDto = healthService.updateHealth(updateHealthDto, healthEntity.getId());
-
-        assertThat(updatedHealthDto).isNotNull();
-        assertThat(updatedHealthDto.status()).isEqualTo("Recovered");
-        assertThat(updatedHealthDto.updateDate()).isEqualTo(Date.valueOf(LocalDate.now()));
+        assertThrows(HealthNotFoundException.class, () -> healthService.getHealthById(1L));
     }
 
     @Test
-    void deleteHealthTest() {
-        HealthEntity healthEntity = new HealthEntity("Critical", Date.valueOf(LocalDate.now()));
-        healthRepository.save(healthEntity);
+    void testGetAllHealths() {
+        List<HealthEntity> healthEntities = List.of(healthEntity);
+        when(healthRepository.findAll()).thenReturn(healthEntities);
+        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
 
-        healthService.deleteHealth(healthEntity.getId());
+        List<HealthDto> healthDtos = healthService.getAllHealths();
 
-        Optional<HealthEntity> deletedHealth = healthRepository.findById(healthEntity.getId());
-        assertThat(deletedHealth).isEmpty();
+        assertNotNull(healthDtos);
+        assertEquals(1, healthDtos.size());
+        verify(healthRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testUpdateHealth_HealthExists() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.of(healthEntity));
+        when(healthMapper.mapDtoToEntity(any(HealthDto.class))).thenReturn(healthEntity);
+        when(healthRepository.save(any(HealthEntity.class))).thenReturn(healthEntity);
+        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
+
+        HealthDto updatedHealth = healthService.updateHealth(healthDto, 1L);
+
+        assertNotNull(updatedHealth);
+        assertEquals(1L, updatedHealth.id());
+        verify(healthRepository, times(1)).findById(1L);
+        verify(healthRepository, times(1)).save(any(HealthEntity.class));
+    }
+
+    @Test
+    void testUpdateHealth_HealthNotFound() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(HealthNotFoundException.class, () -> healthService.updateHealth(healthDto, 1L));
+    }
+
+    @Test
+    void testDeleteHealth_HealthExists() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.of(healthEntity));
+
+        healthService.deleteHealth(1L);
+
+        verify(healthRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteHealth_HealthNotFound() {
+        when(healthRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(HealthNotFoundException.class, () -> healthService.deleteHealth(1L));
+    }
+
+    @Test
+    void testFindHealthByCriteria() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<HealthEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<HealthEntity> root = mock(Root.class);
+        TypedQuery<HealthEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(HealthEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(HealthEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(healthEntity));
+        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
+
+        HealthSearchRequest request = new HealthSearchRequest("Healthy", Date.valueOf(LocalDate.now()));
+        List<HealthDto> foundHealths = healthService.findHealthByCriteria(request);
+
+        assertNotNull(foundHealths);
+        assertEquals(1, foundHealths.size());
+        verify(entityManager, times(1)).createQuery(criteriaQuery);
     }
 }

@@ -4,12 +4,12 @@ import com.animalmanagementsystem.shelter.dtos.AnimalDto;
 import com.animalmanagementsystem.shelter.entities.AnimalEntity;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
 import com.animalmanagementsystem.shelter.entities.HealthEntity;
+import com.animalmanagementsystem.shelter.exceptions.AnimalNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.AnimalMapper;
 import com.animalmanagementsystem.shelter.mappers.CageMapper;
-import com.animalmanagementsystem.shelter.mappers.impl.AnimalMapperImpl;
-import com.animalmanagementsystem.shelter.mappers.impl.HealthMapperImpl;
+import com.animalmanagementsystem.shelter.mappers.HealthMapper;
 import com.animalmanagementsystem.shelter.repositories.AnimalRepository;
 import com.animalmanagementsystem.shelter.services.impl.AnimalServiceImpl;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,26 +34,24 @@ class AnimalServiceTest {
     private AnimalRepository animalRepository;
 
     @Mock
-    private AnimalMapperImpl animalMapper;
+    private AnimalMapper animalMapper;
 
     @Mock
     private CageMapper cageMapper;
 
     @Mock
-    private HealthMapperImpl healthMapper;
+    private HealthMapper healthMapper;
 
     @InjectMocks
     private AnimalServiceImpl animalService;
 
     private AnimalDto animalDto;
     private AnimalEntity animalEntity;
-    private CageEntity cageEntity;
-    private HealthEntity healthEntity;
 
     @BeforeEach
     void setUp() {
-        cageEntity = new CageEntity("Cage1", "Available");
-        healthEntity = new HealthEntity("Healthy", new Date());
+        CageEntity cageEntity = new CageEntity("Cage1", "Available");
+        HealthEntity healthEntity = new HealthEntity("Healthy", new Date());
         animalDto = new AnimalDto(1L, "Lion", "Mammal", 5, cageMapper.mapEntityToDto(cageEntity), null, healthMapper.mapEntityToDto(healthEntity));
         animalEntity = new AnimalEntity("Lion", "Mammal", 5, cageEntity, null, healthEntity);
     }
@@ -85,11 +83,11 @@ class AnimalServiceTest {
     void testGetAnimalByIdNotFound() {
         when(animalRepository.findById(1L)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+        AnimalNotFoundException exception = assertThrows(AnimalNotFoundException.class, () -> {
             animalService.getAnimalById(1L);
         });
 
-        assertEquals("Animal not found", exception.getMessage());
+        assertEquals("Animal with id 1 not found.", exception.getMessage());
     }
 
     @Test
@@ -123,11 +121,11 @@ class AnimalServiceTest {
     void testUpdateAnimalNotFound() {
         when(animalRepository.findById(1L)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+        AnimalNotFoundException exception = assertThrows(AnimalNotFoundException.class, () -> {
             animalService.updateAnimal(animalDto, 1L);
         });
 
-        assertEquals("Animal not found", exception.getMessage());
+        assertEquals("Animal with id 1 not found.", exception.getMessage());
     }
 
     @Test
@@ -144,10 +142,10 @@ class AnimalServiceTest {
     void testDeleteAnimalNotFound() {
         when(animalRepository.findById(1L)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+        AnimalNotFoundException exception = assertThrows(AnimalNotFoundException.class, () -> {
             animalService.deleteAnimal(1L);
         });
 
-        assertEquals("Animal not found", exception.getMessage());
+        assertEquals("Animal with id 1 not found.", exception.getMessage());
     }
 }

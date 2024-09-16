@@ -2,87 +2,160 @@ package com.animalmanagementsystem.shelter.services;
 
 import com.animalmanagementsystem.shelter.dtos.CageDto;
 import com.animalmanagementsystem.shelter.entities.CageEntity;
+import com.animalmanagementsystem.shelter.exceptions.CageNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.CageMapper;
 import com.animalmanagementsystem.shelter.repositories.CageRepository;
-import jakarta.transaction.Transactional;
+import com.animalmanagementsystem.shelter.searchs.CageSearchRequest;
+import com.animalmanagementsystem.shelter.services.impl.CageServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class CageServiceTest {
 
-    @Autowired
-    CageService cageService;
+    @Mock
+    private CageRepository cageRepository;
 
-    @Autowired
-    CageRepository cageRepository;
+    @Mock
+    private CageMapper cageMapper;
 
+    @Mock
+    private EntityManager entityManager;
 
-    @Test
-    void getAllCagesTest() {
-        CageEntity cageEntity = new CageEntity("A2", "Available");
-        CageEntity cageEntity1 = new CageEntity("A3", "Not Available");
-        CageEntity cageEntity2 = new CageEntity("A4", "Available");
+    @InjectMocks
+    private CageServiceImpl cageService;
 
-        cageRepository.save(cageEntity);
-        cageRepository.save(cageEntity1);
-        cageRepository.save(cageEntity2);
-        List<CageDto> allCages = this.cageService.getAllCages();
+    private CageEntity cageEntity;
+    private CageDto cageDto;
 
-        assertThat(allCages).hasSizeGreaterThan(1).hasSize(4);
+    @BeforeEach
+    void setUp() {
+        cageEntity = new CageEntity();
+        cageEntity.setId(1L);
+        cageEntity.setCageNumber("Cage-1");
+        cageEntity.setAvailability("Available");
+
+        cageDto = new CageDto(1L, "Cage-1", "Available");
     }
 
     @Test
-    void createCageTest() {
-        CageDto cageDto = new CageDto(null, "B1", "Available");
+    void testCreateCage() {
+        when(cageMapper.mapDtoToEntity(any(CageDto.class))).thenReturn(cageEntity);
+        when(cageRepository.save(any(CageEntity.class))).thenReturn(cageEntity);
+        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
 
-        CageDto savedCageDto = cageService.createCage(cageDto);
+        CageDto createdCage = cageService.createCage(cageDto);
 
-        assertThat(savedCageDto).isNotNull();
-        assertThat(savedCageDto.cageNumber()).isEqualTo("B1");
-        assertThat(savedCageDto.availability()).isEqualTo("Available");
+        assertNotNull(createdCage);
+        assertEquals(cageDto.id(), createdCage.id());
+        verify(cageRepository, times(1)).save(any(CageEntity.class));
     }
 
     @Test
-    void getCageByIdTest() {
-        CageEntity cageEntity = new CageEntity("C1", "Available");
-        cageRepository.save(cageEntity);
+    void testGetCageById_CageExists() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.of(cageEntity));
+        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
 
-        CageDto foundCageDto = cageService.getCageById(cageEntity.getId());
+        CageDto foundCage = cageService.getCageById(1L);
 
-        assertThat(foundCageDto).isNotNull();
-        assertThat(foundCageDto.cageNumber()).isEqualTo("C1");
-        assertThat(foundCageDto.availability()).isEqualTo("Available");
+        assertNotNull(foundCage);
+        assertEquals(1L, foundCage.id());
+        verify(cageRepository, times(1)).findById(1L);
     }
 
     @Test
-    void updateCageTest() {
-        CageEntity cageEntity = new CageEntity("D1", "Available");
-        cageRepository.save(cageEntity);
+    void testGetCageById_CageNotFound() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.empty());
 
-        CageDto updateCageDto = new CageDto(cageEntity.getId(), "D2", "Not Available");
-
-        CageDto updatedCageDto = cageService.updateCage(updateCageDto, cageEntity.getId());
-
-        assertThat(updatedCageDto).isNotNull();
-        assertThat(updatedCageDto.cageNumber()).isEqualTo("D2");
-        assertThat(updatedCageDto.availability()).isEqualTo("Not Available");
+        assertThrows(CageNotFoundException.class, () -> cageService.getCageById(1L));
     }
 
     @Test
-    void deleteCageTest() {
-        CageEntity cageEntity = new CageEntity("E1", "Available");
-        cageRepository.save(cageEntity);
+    void testGetAllCages() {
+        List<CageEntity> cageEntities = List.of(cageEntity);
+        when(cageRepository.findAll()).thenReturn(cageEntities);
+        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
 
-        cageService.deleteCage(cageEntity.getId());
+        List<CageDto> cageDtos = cageService.getAllCages();
 
-        Optional<CageEntity> deletedCage = cageRepository.findById(cageEntity.getId());
-        assertThat(deletedCage).isEmpty();
+        assertNotNull(cageDtos);
+        assertEquals(1, cageDtos.size());
+        verify(cageRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testUpdateCage_CageExists() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.of(cageEntity));
+        when(cageMapper.mapDtoToEntity(any(CageDto.class))).thenReturn(cageEntity);
+        when(cageRepository.save(any(CageEntity.class))).thenReturn(cageEntity);
+        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
+
+        CageDto updatedCage = cageService.updateCage(cageDto, 1L);
+
+        assertNotNull(updatedCage);
+        assertEquals(1L, updatedCage.id());
+        verify(cageRepository, times(1)).findById(1L);
+        verify(cageRepository, times(1)).save(any(CageEntity.class));
+    }
+
+    @Test
+    void testUpdateCage_CageNotFound() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(CageNotFoundException.class, () -> cageService.updateCage(cageDto, 1L));
+    }
+
+    @Test
+    void testDeleteCage_CageExists() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.of(cageEntity));
+
+        cageService.deleteCage(1L);
+
+        verify(cageRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteCage_CageNotFound() {
+        when(cageRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(CageNotFoundException.class, () -> cageService.deleteCage(1L));
+    }
+
+    @Test
+    void testFindCageByCriteria() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<CageEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<CageEntity> root = mock(Root.class);
+        TypedQuery<CageEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(CageEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(CageEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(cageEntity));
+        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
+
+        CageSearchRequest request = new CageSearchRequest("Cage-1", null);
+        List<CageDto> foundCages = cageService.findCageByCriteria(request);
+
+        assertNotNull(foundCages);
+        assertEquals(1, foundCages.size());
+        verify(entityManager, times(1)).createQuery(criteriaQuery);
     }
 }

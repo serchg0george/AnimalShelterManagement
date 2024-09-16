@@ -2,17 +2,18 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
-import com.animalmanagementsystem.shelter.mappers.impl.UserMapperImpl;
+import com.animalmanagementsystem.shelter.exceptions.UserNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.UserMapper;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
 import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.UserService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +24,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapperImpl userMapper;
+    private final UserMapper userMapper;
     private final EntityManager entityManager;
-    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
-    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapper, EntityManager entityManager) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto createUser(UserDto userDto) {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         UserEntity savedUser = userRepository.save(userEntity);
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
@@ -92,11 +93,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto, Long id) {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
         if (optionalUserEntity.isEmpty()) {
-            throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE);
+            throw new UserNotFoundException(id);
         }
 
         UserEntity updatedUserEntity = optionalUserEntity.get();
@@ -110,10 +112,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
         if (optionalUserEntity.isEmpty()) {
-            throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE);
+            throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
     }

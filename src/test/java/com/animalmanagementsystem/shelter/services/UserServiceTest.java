@@ -2,35 +2,66 @@ package com.animalmanagementsystem.shelter.services;
 
 import com.animalmanagementsystem.shelter.dtos.UserDto;
 import com.animalmanagementsystem.shelter.entities.UserEntity;
+import com.animalmanagementsystem.shelter.exceptions.UserNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.UserMapper;
 import com.animalmanagementsystem.shelter.repositories.UserRepository;
+import com.animalmanagementsystem.shelter.searchs.UserSearchRequest;
 import com.animalmanagementsystem.shelter.services.impl.UserServiceImpl;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Autowired
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserMapper userMapper;
+
+    @Mock
+    private EntityManager entityManager;
+
+    @InjectMocks
     private UserServiceImpl userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private UserEntity userEntity;
+    private UserDto userDto;
+
+    @BeforeEach
+    void setUp() {
+        userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setFirstName("John");
+        userEntity.setLastName("Doe");
+        userEntity.setEmail("john.doe@example.com");
+        userEntity.setPhoneNumber("1234567890");
+
+        userDto = new UserDto(1L, "john.doe@example.com", "password", "John", "Doe", "1234567890");
+    }
 
     @Test
     void createUserTest() {
-        UserDto userDto = new UserDto(null, "john.doe@example.com", "password123", "John", "Doe", "1234567890");
+        when(userMapper.mapDtoToEntity(any(UserDto.class))).thenReturn(userEntity);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        when(userMapper.mapEntityToDto(any(UserEntity.class))).thenReturn(userDto);
 
         UserDto savedUserDto = userService.createUser(userDto);
 
@@ -38,70 +69,195 @@ class UserServiceTest {
         assertThat(savedUserDto.firstName()).isEqualTo("John");
         assertThat(savedUserDto.lastName()).isEqualTo("Doe");
         assertThat(savedUserDto.email()).isEqualTo("john.doe@example.com");
+        verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
     @Test
     void getUserByIdTest() {
-        UserEntity userEntity = new UserEntity("jane.doe@example.com", "password123", "Jane", "Doe", "0987654321");
-        userRepository.save(userEntity);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+        when(userMapper.mapEntityToDto(any(UserEntity.class))).thenReturn(userDto);
 
-        UserDto foundUserDto = userService.getUserById(userEntity.getId());
+        UserDto foundUserDto = userService.getUserById(1L);
 
         assertThat(foundUserDto).isNotNull();
-        assertThat(foundUserDto.firstName()).isEqualTo("Jane");
+        assertThat(foundUserDto.firstName()).isEqualTo("John");
         assertThat(foundUserDto.lastName()).isEqualTo("Doe");
-        assertThat(foundUserDto.email()).isEqualTo("jane.doe@example.com");
+        assertThat(foundUserDto.email()).isEqualTo("john.doe@example.com");
+        verify(userRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void getUserById_NotFoundTest() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.getUserById(1L);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("User with id 1 not found.");
     }
 
     @Test
     void getAllUsersTest() {
-        UserEntity userEntity1 = new UserEntity("john.smith@example.com", "password1", "John", "Smith", "1112223333");
-        UserEntity userEntity2 = new UserEntity("alice.johnson@example.com", "password2", "Alice", "Johnson", "4445556666");
+        UserEntity userEntity2 = new UserEntity();
+        userEntity2.setId(2L);
+        userEntity2.setFirstName("Jane");
+        userEntity2.setLastName("Doe");
+        userEntity2.setEmail("jane.doe@example.com");
+        userEntity2.setPassword("0987654321");
+        userEntity2.setPhoneNumber("1234567890");
 
-        userRepository.save(userEntity1);
-        userRepository.save(userEntity2);
+        when(userRepository.findAll()).thenReturn(List.of(userEntity, userEntity2));
+        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
+        when(userMapper.mapEntityToDto(userEntity2)).thenReturn(new UserDto(2L, "jane.doe@example.com", "password", "Jane", "Doe", "1234567890"));
 
         List<UserDto> allUsers = userService.getAllUsers();
 
         assertThat(allUsers)
                 .isNotNull()
-                .hasSizeGreaterThanOrEqualTo(2)
-                .extracting("email").contains("john.smith@example.com", "alice.johnson@example.com");
+                .hasSize(2)
+                .extracting(UserDto::email)
+                .containsExactlyInAnyOrder("john.doe@example.com", "jane.doe@example.com");
+
+        verify(userRepository, times(1)).findAll();
     }
+
 
     @Test
     void updateUserTest() {
-        UserEntity userEntity = new UserEntity("mike.brown@example.com", "initialPass", "Mike", "Brown", "7778889999");
-        userRepository.save(userEntity);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+        when(userMapper.mapDtoToEntity(any(UserDto.class))).thenReturn(userEntity);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        when(userMapper.mapEntityToDto(any(UserEntity.class))).thenReturn(userDto);
 
-        UserDto updateUserDto = new UserDto(userEntity.getId(), "mike.brown@example.com", "newPass123", "Mike", "Brown", "7778889999");
-
-        UserDto updatedUserDto = userService.updateUser(updateUserDto, userEntity.getId());
+        UserDto updatedUserDto = userService.updateUser(userDto, 1L);
 
         assertThat(updatedUserDto).isNotNull();
-        assertThat(updatedUserDto.firstName()).isEqualTo("Mike");
-        assertThat(updatedUserDto.password()).isEqualTo("newPass123");
+        assertThat(updatedUserDto.firstName()).isEqualTo("John");
+        assertThat(updatedUserDto.lastName()).isEqualTo("Doe");
+        assertThat(updatedUserDto.email()).isEqualTo("john.doe@example.com");
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    @Test
+    void updateUser_NotFoundTest() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        UserDto updateUserDto = new UserDto(1L, "John", "Doe", "john.doe@example.com", "password", "1234567890");
+
+        Exception exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.updateUser(updateUserDto, 1L);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("User with id 1 not found.");
     }
 
     @Test
     void deleteUserTest() {
-        UserEntity userEntity = new UserEntity("Tom", "White", "tom.white@example.com", "securePass", "1231231234");
-        userRepository.save(userEntity);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 
-        userService.deleteUser(userEntity.getId());
+        userService.deleteUser(1L);
 
-        Optional<UserEntity> deletedUser = userRepository.findById(userEntity.getId());
-        assertThat(deletedUser).isEmpty();
+        verify(userRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    void getUserById_NotFoundTest() {
-        Long nonExistentId = 999L;
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            userService.getUserById(nonExistentId);
+    void deleteUser_NotFoundTest() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.deleteUser(1L);
         });
 
-        assertThat(exception.getMessage()).isEqualTo("User not found");
+        assertThat(exception.getMessage()).isEqualTo("User with id 1 not found.");
+    }
+
+    @Test
+    void findUserByCriteria_EmailTest() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<UserEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<UserEntity> root = mock(Root.class);
+        TypedQuery<UserEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(UserEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(UserEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
+        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
+
+        UserSearchRequest request = new UserSearchRequest("john.doe@example.com", null, null, null);
+
+        List<UserDto> foundUsers = userService.findUserByCriteria(request);
+
+        assertThat(foundUsers).isNotNull().hasSize(1).extracting(UserDto::email).contains("john.doe@example.com");
+        verify(entityManager, times(1)).getCriteriaBuilder();
+    }
+
+    @Test
+    void findUserByCriteria_FirstNameTest() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<UserEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<UserEntity> root = mock(Root.class);
+        TypedQuery<UserEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(UserEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(UserEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
+        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
+
+        UserSearchRequest request = new UserSearchRequest(null, "John", null, null);
+
+        List<UserDto> foundUsers = userService.findUserByCriteria(request);
+
+        assertThat(foundUsers).isNotNull().hasSize(1).extracting(UserDto::firstName).contains("John");
+        verify(entityManager, times(1)).getCriteriaBuilder();
+    }
+
+    @Test
+    void findUserByCriteria_LastNameTest() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<UserEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<UserEntity> root = mock(Root.class);
+        TypedQuery<UserEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(UserEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(UserEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
+        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
+
+        UserSearchRequest request = new UserSearchRequest(null, null, "Doe", null);
+
+        List<UserDto> foundUsers = userService.findUserByCriteria(request);
+
+        assertThat(foundUsers).isNotNull().hasSize(1).extracting(UserDto::lastName).contains("Doe");
+        verify(entityManager, times(1)).getCriteriaBuilder();
+    }
+
+    @Test
+    void findUserByCriteria_PhoneNumberTest() {
+        CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+        CriteriaQuery<UserEntity> criteriaQuery = mock(CriteriaQuery.class);
+        Root<UserEntity> root = mock(Root.class);
+        TypedQuery<UserEntity> typedQuery = mock(TypedQuery.class);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(UserEntity.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(UserEntity.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
+        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
+
+        UserSearchRequest request = new UserSearchRequest(null, null, null, "1234567890");
+
+        List<UserDto> foundUsers = userService.findUserByCriteria(request);
+
+        assertThat(foundUsers).isNotNull().hasSize(1).extracting(UserDto::phoneNumber).contains("1234567890");
+        verify(entityManager, times(1)).getCriteriaBuilder();
     }
 }
-

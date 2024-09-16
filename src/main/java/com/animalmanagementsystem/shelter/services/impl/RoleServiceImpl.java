@@ -2,17 +2,18 @@ package com.animalmanagementsystem.shelter.services.impl;
 
 import com.animalmanagementsystem.shelter.dtos.RoleDto;
 import com.animalmanagementsystem.shelter.entities.RoleEntity;
-import com.animalmanagementsystem.shelter.mappers.impl.RoleMapperImpl;
+import com.animalmanagementsystem.shelter.exceptions.RoleNotFoundException;
+import com.animalmanagementsystem.shelter.mappers.RoleMapper;
 import com.animalmanagementsystem.shelter.repositories.RoleRepository;
 import com.animalmanagementsystem.shelter.searchs.RoleSearchRequest;
 import com.animalmanagementsystem.shelter.services.RoleService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +24,10 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleMapperImpl roleMapper;
+    private final RoleMapper roleMapper;
     private final EntityManager entityManager;
-    private static final String ROLE_NOT_FOUND_MESSAGE = "Role not found";
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMapperImpl roleMapper, EntityManager entityManager) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, EntityManager entityManager) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.entityManager = entityManager;
@@ -62,6 +62,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto createRole(RoleDto roleDto) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         RoleEntity savedRole = roleRepository.save(roleEntity);
@@ -72,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto getRoleById(Long id) {
         return roleRepository.findById(id)
                 .map(roleMapper::mapEntityToDto)
-                .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
     @Override
@@ -84,11 +85,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto updateRole(RoleDto roleDto, Long id) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
         if (optionalRoleEntity.isEmpty()) {
-            throw new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE);
+            throw new RoleNotFoundException(id);
         }
 
         RoleEntity updatedRoleEntity = optionalRoleEntity.get();
@@ -100,10 +102,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
         if (optionalRoleEntity.isEmpty()) {
-            throw new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE);
+            throw new RoleNotFoundException(id);
         }
         roleRepository.deleteById(id);
     }
