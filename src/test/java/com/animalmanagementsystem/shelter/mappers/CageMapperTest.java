@@ -6,23 +6,19 @@ import com.animalmanagementsystem.shelter.mappers.impl.CageMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CageMapperTest {
     private final CageMapper cageMapper = new CageMapperImpl();
 
     @Test
     void checkNullDto() {
-        CageDto cageDto = cageMapper.mapEntityToDto(null);
-
-        assertNull(cageDto);
+        assertThrows(NullPointerException.class, () -> cageMapper.mapDtoToEntity(null));
     }
 
     @Test
     void checkNullEntity() {
-        CageEntity cageEntity = cageMapper.mapDtoToEntity(null);
-
-        assertNull(cageEntity);
+        assertThrows(NullPointerException.class, () -> cageMapper.mapEntityToDto(null));
     }
 
     @Test
