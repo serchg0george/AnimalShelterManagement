@@ -2,12 +2,16 @@ package com.animalmanagementsystem.shelter.entities;
 
 import com.animalmanagementsystem.shelter.entities.base.BaseEntity;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "t_user")
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity implements UserDetails {
 
     @Column(name = "email")
     private String email;
@@ -26,23 +30,31 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
             mappedBy = "users", fetch = FetchType.LAZY)
-    private List<UserAnimalEntity> userAnimalEntity;
+    private transient List<UserAnimalEntity> userAnimalEntity;
 
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
             mappedBy = "users", fetch = FetchType.LAZY)
-    private List<UserRoleEntity> userRoleEntity;
+    private transient List<UserRoleEntity> userRoleEntity;
+
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     public UserEntity() {
     }
 
+
     public UserEntity(String email, String password, String firstName,
-                      String lastName, String phoneNumber) {
+                      String lastName, String phoneNumber, Role role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.role = role;
     }
+
 
     public String getEmail() {
         return email;
@@ -52,8 +64,38 @@ public class UserEntity extends BaseEntity {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public void setPassword(String password) {
