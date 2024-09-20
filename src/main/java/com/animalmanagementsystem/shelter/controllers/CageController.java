@@ -21,7 +21,7 @@ public class CageController {
         this.cageService = cageService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<CageDto>> searchCage(@RequestBody CageSearchRequest request) {
         List<CageDto> cageDtoList = cageService.findCageByCriteria(request);
         return ResponseEntity.ok(cageDtoList);

@@ -21,7 +21,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<RoleDto>> searchRole(@RequestBody RoleSearchRequest request) {
         List<RoleDto> roleDtoList = roleService.findRoleByCriteria(request);
         return ResponseEntity.ok(roleDtoList);

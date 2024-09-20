@@ -21,7 +21,7 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<AnimalDto>> searchAnimal(@RequestBody AnimalSearchRequest request) {
         List<AnimalDto> animalDtoList = animalService.findAnimalByCriteria(request);
         return ResponseEntity.ok(animalDtoList);

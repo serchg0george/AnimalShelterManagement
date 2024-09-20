@@ -21,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<UserDto>> searchUser(@RequestBody UserSearchRequest request) {
         List<UserDto> userDtoList = userService.findUserByCriteria(request);
         return ResponseEntity.ok(userDtoList);

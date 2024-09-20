@@ -20,7 +20,7 @@ public class HealthController {
         this.healthService = healthService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<HealthDto>> searchHealth(@RequestBody HealthSearchRequest request) {
         List<HealthDto> healthDtoList = healthService.findHealthByCriteria(request);
         return ResponseEntity.ok(healthDtoList);
