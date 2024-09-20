@@ -89,10 +89,9 @@ public class CageServiceImpl implements CageService {
     public CageDto updateCage(CageDto cageDto, Long id) {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDto);
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(cageDto.id());
-        if (optionalCageEntity.isEmpty()) {
-            throw new CageNotFoundException(id);
-        }
-        CageEntity updatedCageEntity = optionalCageEntity.get();
+
+        CageEntity updatedCageEntity = optionalCageEntity.orElseThrow(() -> new CageNotFoundException(id));
+
         updatedCageEntity.setCageNumber(cageEntity.getCageNumber());
         updatedCageEntity.setAvailability(cageEntity.getAvailability());
         updatedCageEntity.setId(id);
@@ -103,9 +102,9 @@ public class CageServiceImpl implements CageService {
     @Transactional
     public void deleteCage(Long id) {
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(id);
-        if (optionalCageEntity.isEmpty()) {
-            throw new CageNotFoundException(id);
-        }
+
+        optionalCageEntity.orElseThrow(() -> new CageNotFoundException(id));
+
         cageRepository.deleteById(id);
     }
 }

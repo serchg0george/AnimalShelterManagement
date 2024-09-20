@@ -97,11 +97,9 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, Long id) {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
-        if (optionalUserEntity.isEmpty()) {
-            throw new UserNotFoundException(id);
-        }
 
-        UserEntity updatedUserEntity = optionalUserEntity.get();
+        UserEntity updatedUserEntity = optionalUserEntity.orElseThrow(() -> new UserNotFoundException(id));
+
         updatedUserEntity.setFirstName(userEntity.getFirstName());
         updatedUserEntity.setLastName(userEntity.getLastName());
         updatedUserEntity.setEmail(userEntity.getEmail());
@@ -115,9 +113,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
-        if (optionalUserEntity.isEmpty()) {
-            throw new UserNotFoundException(id);
-        }
+
+        optionalUserEntity.orElseThrow(() -> new UserNotFoundException(id));
+
         userRepository.deleteById(id);
     }
 }

@@ -83,10 +83,9 @@ public class AnimalServiceImpl implements AnimalService {
     public AnimalDto updateAnimal(AnimalDto animalDto, Long id) {
         AnimalEntity animalEntity = animalMapper.mapDtoToEntity(animalDto);
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(animalDto.id());
-        if (optionalAnimalEntity.isEmpty()) {
-            throw new AnimalNotFoundException(id);
-        }
-        AnimalEntity updatedAnimalEntity = optionalAnimalEntity.get();
+
+        AnimalEntity updatedAnimalEntity = optionalAnimalEntity.orElseThrow(() -> new AnimalNotFoundException(id));
+
         updatedAnimalEntity.setName(animalEntity.getName());
         updatedAnimalEntity.setAge(animalEntity.getAge());
         updatedAnimalEntity.setSpecies(animalEntity.getSpecies());
@@ -100,9 +99,9 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     public void deleteAnimal(Long id) {
         Optional<AnimalEntity> optionalAnimalEntity = animalRepository.findById(id);
-        if (optionalAnimalEntity.isEmpty()) {
-            throw new AnimalNotFoundException(id);
-        }
+
+        optionalAnimalEntity.orElseThrow(() -> new AnimalNotFoundException(id));
+
         animalRepository.deleteById(id);
     }
 }

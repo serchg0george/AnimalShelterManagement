@@ -51,11 +51,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     public UserRoleDto updateUserRole(UserRoleDto userRoleDto, Long id) {
         UserRoleEntity userRoleEntity = userRoleMapper.mapDtoToEntity(userRoleDto);
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(userRoleDto.id());
-        if (optionalUserRoleEntity.isEmpty()) {
-            throw new UserRoleNotFoundException(id);
-        }
 
-        UserRoleEntity updatedUserRoleEntity = optionalUserRoleEntity.get();
+        UserRoleEntity updatedUserRoleEntity = optionalUserRoleEntity.orElseThrow(() -> new UserRoleNotFoundException(id));
+
         updatedUserRoleEntity.setId(id);
         updatedUserRoleEntity.setRoles(userRoleEntity.getRoles());
         updatedUserRoleEntity.setUsers(userRoleEntity.getUsers());
@@ -66,9 +64,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Transactional
     public void deleteUserRole(Long id) {
         Optional<UserRoleEntity> optionalUserRoleEntity = userRoleRepository.findById(id);
-        if (optionalUserRoleEntity.isEmpty()) {
-            throw new UserRoleNotFoundException(id);
-        }
+
+        optionalUserRoleEntity.orElseThrow(() -> new UserRoleNotFoundException(id));
+
         userRoleRepository.deleteById(id);
     }
 }

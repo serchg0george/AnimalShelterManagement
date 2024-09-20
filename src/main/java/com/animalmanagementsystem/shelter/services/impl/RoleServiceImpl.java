@@ -89,11 +89,8 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto updateRole(RoleDto roleDto, Long id) {
         RoleEntity roleEntity = roleMapper.mapDtoToEntity(roleDto);
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(roleDto.id());
-        if (optionalRoleEntity.isEmpty()) {
-            throw new RoleNotFoundException(id);
-        }
 
-        RoleEntity updatedRoleEntity = optionalRoleEntity.get();
+        RoleEntity updatedRoleEntity = optionalRoleEntity.orElseThrow(() -> new RoleNotFoundException(id));
 
         updatedRoleEntity.setId(id);
         updatedRoleEntity.setName(roleEntity.getName());
@@ -105,9 +102,9 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
-        if (optionalRoleEntity.isEmpty()) {
-            throw new RoleNotFoundException(id);
-        }
+
+        optionalRoleEntity.orElseThrow(() -> new RoleNotFoundException(id));
+
         roleRepository.deleteById(id);
     }
 }

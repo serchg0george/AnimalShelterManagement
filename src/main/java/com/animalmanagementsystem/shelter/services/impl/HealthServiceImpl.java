@@ -92,10 +92,9 @@ public class HealthServiceImpl implements HealthService {
     public HealthDto updateHealth(HealthDto healthDto, Long id) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
-        if (optionalHealthEntity.isEmpty()) {
-            throw new HealthNotFoundException(id);
-        }
-        HealthEntity updatedHealthEntity = optionalHealthEntity.get();
+
+        HealthEntity updatedHealthEntity = optionalHealthEntity.orElseThrow(() -> new HealthNotFoundException(id));
+
         updatedHealthEntity.setStatus(healthEntity.getStatus());
         updatedHealthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         updatedHealthEntity.setId(id);
@@ -106,9 +105,9 @@ public class HealthServiceImpl implements HealthService {
     @Transactional
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
-        if (optionalHealthEntity.isEmpty()) {
-            throw new HealthNotFoundException(id);
-        }
+        
+        optionalHealthEntity.orElseThrow(() -> new HealthNotFoundException(id));
+
         healthRepository.deleteById(id);
     }
 }
