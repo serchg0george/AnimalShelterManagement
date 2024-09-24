@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
         userService.createUser(userDto);
-        return ResponseEntity.ok("User created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
@@ -47,13 +47,13 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable("id") Long id,
                                              @Valid @RequestBody UserDto userDto) {
         userService.updateUser(userDto, id);
-        return ResponseEntity.ok("User updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.ok("");
     }
 
 }

@@ -30,7 +30,7 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<String> createRole(@Valid @RequestBody RoleDto roleDto) {
         roleService.createRole(roleDto);
-        return ResponseEntity.ok("Role created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
@@ -47,13 +47,13 @@ public class RoleController {
     public ResponseEntity<String> updateRole(@PathVariable("id") Long id,
                                              @Valid @RequestBody RoleDto roleDto) {
         roleService.updateRole(roleDto, id);
-        return ResponseEntity.ok("Role updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteRole(@PathVariable("id") Long id) {
         roleService.deleteRole(id);
-        return ResponseEntity.ok("Role deleted");
+        return ResponseEntity.ok("");
     }
 
 }

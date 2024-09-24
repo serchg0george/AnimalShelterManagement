@@ -30,7 +30,7 @@ public class AnimalController {
     @PostMapping
     public ResponseEntity<String> createAnimal(@Valid @RequestBody AnimalDto animalDto) {
         animalService.createAnimal(animalDto);
-        return ResponseEntity.ok("Animal created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
@@ -47,12 +47,12 @@ public class AnimalController {
     public ResponseEntity<String> updateAnimal(@PathVariable("id") Long id,
                                                @Valid @RequestBody AnimalDto animalDto) {
         animalService.updateAnimal(animalDto, id);
-        return ResponseEntity.ok("Animal updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAnimal(@PathVariable("id") Long id) {
         animalService.deleteAnimal(id);
-        return ResponseEntity.ok("Animal deleted");
+        return ResponseEntity.ok("");
     }
 }
