@@ -44,7 +44,8 @@ public class RoleServiceImpl implements RoleService {
             Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), "%"
                     + request.name() + "%");
             predicates.add(namePredicate);
-        } else if (request.description() != null && !request.description().isBlank()) {
+        }
+        if (request.description() != null && !request.description().isBlank()) {
             Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), "%"
                     + request.description() + "%");
             predicates.add(descriptionPredicate);

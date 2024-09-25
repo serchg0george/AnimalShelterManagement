@@ -43,11 +43,13 @@ public class AnimalServiceImpl implements AnimalService {
         if (request.age() != null && request.age() > 0) {
             Predicate agePredicate = criteriaBuilder.equal(root.get("age"), request.age());
             predicates.add(agePredicate);
-        } else if (request.species() != null && !request.species().isBlank()) {
+        }
+        if (request.species() != null && !request.species().isBlank()) {
             Predicate speciesPredicate = criteriaBuilder.like(root.get("species"), "%"
                     + request.species() + "%");
             predicates.add(speciesPredicate);
-        } else if (request.name() != null && !request.name().isBlank()) {
+        }
+        if (request.name() != null && !request.name().isBlank()) {
             Predicate namePredicate = criteriaBuilder.like(root.get("name"), "%"
                     + request.name() + "%");
             predicates.add(namePredicate);

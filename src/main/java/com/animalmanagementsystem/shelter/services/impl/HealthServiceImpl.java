@@ -46,7 +46,8 @@ public class HealthServiceImpl implements HealthService {
             Predicate statusPredicate = criteriaBuilder.like(healthEntityRoot.get("status"), "%"
                     + request.status() + "%");
             predicates.add(statusPredicate);
-        } else if (request.updateDate() != null) {
+        }
+        if (request.updateDate() != null) {
             Predicate updateDatePredicate = criteriaBuilder.equal(healthEntityRoot.get("updateDate"),
                     request.updateDate());
             predicates.add(updateDatePredicate);
@@ -105,7 +106,7 @@ public class HealthServiceImpl implements HealthService {
     @Transactional
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
-        
+
         optionalHealthEntity.orElseThrow(() -> new HealthNotFoundException(id));
 
         healthRepository.deleteById(id);

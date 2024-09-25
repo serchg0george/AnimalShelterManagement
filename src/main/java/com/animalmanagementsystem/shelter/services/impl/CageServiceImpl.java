@@ -44,7 +44,8 @@ public class CageServiceImpl implements CageService {
             Predicate cagePredicate = criteriaBuilder.like(root.get("cageNumber"), "%"
                     + request.cageNumber() + "%");
             predicates.add(cagePredicate);
-        } else if (request.availability() != null && !request.availability().isBlank()) {
+        }
+        if (request.availability() != null && !request.availability().isBlank()) {
             Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), "%"
                     + request.availability() + "%");
             predicates.add(availabilityPredicate);
