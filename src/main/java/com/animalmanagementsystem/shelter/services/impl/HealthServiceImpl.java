@@ -47,11 +47,6 @@ public class HealthServiceImpl implements HealthService {
                     + request.status() + "%");
             predicates.add(statusPredicate);
         }
-        if (request.updateDate() != null) {
-            Predicate updateDatePredicate = criteriaBuilder.equal(healthEntityRoot.get("updateDate"),
-                    request.updateDate());
-            predicates.add(updateDatePredicate);
-        }
 
         criteriaQuery.where(
                 criteriaBuilder.and(predicates.toArray(new Predicate[0]))

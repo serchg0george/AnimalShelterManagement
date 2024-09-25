@@ -40,15 +40,16 @@ public class RoleServiceImpl implements RoleService {
         List<Predicate> predicates = new ArrayList<>();
         Root<RoleEntity> roleEntityRoot = criteriaQuery.from(RoleEntity.class);
 
-        if (request.name() != null && !request.name().isBlank()) {
-            Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), "%"
-                    + request.name() + "%");
-            predicates.add(namePredicate);
-        }
-        if (request.description() != null && !request.description().isBlank()) {
-            Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), "%"
-                    + request.description() + "%");
-            predicates.add(descriptionPredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), query);
+            Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), query);
+
+            predicates.add(
+                    criteriaBuilder.or(
+                            namePredicate,
+                            descriptionPredicate
+                    ));
         }
 
         criteriaQuery.where(

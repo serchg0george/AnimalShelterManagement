@@ -40,15 +40,16 @@ public class CageServiceImpl implements CageService {
         List<Predicate> predicates = new ArrayList<>();
         Root<CageEntity> root = criteriaQuery.from(CageEntity.class);
 
-        if (request.cageNumber() != null && !request.cageNumber().isBlank()) {
-            Predicate cagePredicate = criteriaBuilder.like(root.get("cageNumber"), "%"
-                    + request.cageNumber() + "%");
-            predicates.add(cagePredicate);
-        }
-        if (request.availability() != null && !request.availability().isBlank()) {
-            Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), "%"
-                    + request.availability() + "%");
-            predicates.add(availabilityPredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate cageNumberPredicate = criteriaBuilder.like(root.get("cageNumber"), query);
+            Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), query);
+
+            predicates.add(
+                    criteriaBuilder.or(
+                            cageNumberPredicate,
+                            availabilityPredicate
+                    ));
         }
 
         criteriaQuery.where(

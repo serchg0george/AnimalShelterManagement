@@ -40,20 +40,17 @@ public class AnimalServiceImpl implements AnimalService {
         List<Predicate> predicates = new ArrayList<>();
         Root<AnimalEntity> root = criteriaQuery.from(AnimalEntity.class);
 
-        if (request.age() != null && request.age() > 0) {
-            Predicate agePredicate = criteriaBuilder.equal(root.get("age"), request.age());
-            predicates.add(agePredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate namePredicate = criteriaBuilder.like(root.get("name"), query);
+            Predicate speciesPredicate = criteriaBuilder.like(root.get("species"), query);
+
+            predicates.add(
+                    criteriaBuilder.or(
+                            namePredicate,
+                            speciesPredicate));
         }
-        if (request.species() != null && !request.species().isBlank()) {
-            Predicate speciesPredicate = criteriaBuilder.like(root.get("species"), "%"
-                    + request.species() + "%");
-            predicates.add(speciesPredicate);
-        }
-        if (request.name() != null && !request.name().isBlank()) {
-            Predicate namePredicate = criteriaBuilder.like(root.get("name"), "%"
-                    + request.name() + "%");
-            predicates.add(namePredicate);
-        }
+
         criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
         TypedQuery<AnimalEntity> query = entityManager.createQuery(criteriaQuery);
 

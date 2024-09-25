@@ -40,24 +40,19 @@ public class UserServiceImpl implements UserService {
         List<Predicate> predicates = new ArrayList<>();
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-        if (request.email() != null && !request.email().isBlank()) {
-            Predicate emailPredicate = criteriaBuilder.like(root.get("email"), "%" + request.email() + "%");
-            predicates.add(emailPredicate);
-        }
-        if (request.firstName() != null && !request.firstName().isBlank()) {
-            Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), "%"
-                    + request.firstName() + "%");
-            predicates.add(firstNamePredicate);
-        }
-        if (request.lastName() != null && !request.lastName().isBlank()) {
-            Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), "%"
-                    + request.lastName() + "%");
-            predicates.add(lastNamePredicate);
-        }
-        if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
-            Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), "%"
-                    + request.phoneNumber() + "%");
-            predicates.add(phoneNumberPredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate emailPredicate = criteriaBuilder.like(root.get("email"), query);
+            Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), query);
+            Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), query);
+            Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), query);
+
+            predicates.add(
+                    criteriaBuilder.or(
+                            emailPredicate,
+                            firstNamePredicate,
+                            lastNamePredicate,
+                            phoneNumberPredicate));
         }
 
         criteriaQuery.where(
