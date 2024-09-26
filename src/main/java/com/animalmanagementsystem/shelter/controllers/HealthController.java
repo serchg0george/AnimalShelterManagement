@@ -20,7 +20,7 @@ public class HealthController {
         this.healthService = healthService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<HealthDto>> searchHealth(@RequestBody HealthSearchRequest request) {
         List<HealthDto> healthDtoList = healthService.findHealthByCriteria(request);
         return ResponseEntity.ok(healthDtoList);
@@ -29,7 +29,7 @@ public class HealthController {
     @PostMapping
     public ResponseEntity<String> createHealth(@Valid @RequestBody HealthDto healthDto) {
         healthService.createHealth(healthDto);
-        return ResponseEntity.ok("Health created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
@@ -46,12 +46,12 @@ public class HealthController {
     public ResponseEntity<String> updateHealth(@PathVariable("id") Long id,
                                                @Valid @RequestBody HealthDto healthDto) {
         healthService.updateHealth(healthDto, id);
-        return ResponseEntity.ok("Health updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteHealth(@PathVariable("id") Long id) {
         healthService.deleteHealth(id);
-        return ResponseEntity.ok("Health deleted");
+        return ResponseEntity.ok("");
     }
 }

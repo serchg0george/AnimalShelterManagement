@@ -21,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<UserDto>> searchUser(@RequestBody UserSearchRequest request) {
         List<UserDto> userDtoList = userService.findUserByCriteria(request);
         return ResponseEntity.ok(userDtoList);
@@ -30,12 +30,15 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
         userService.createUser(userDto);
-        return ResponseEntity.ok("User created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getAllUsers(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(userService.getAllUsers(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
@@ -47,13 +50,13 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable("id") Long id,
                                              @Valid @RequestBody UserDto userDto) {
         userService.updateUser(userDto, id);
-        return ResponseEntity.ok("User updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.ok("");
     }
 
 }

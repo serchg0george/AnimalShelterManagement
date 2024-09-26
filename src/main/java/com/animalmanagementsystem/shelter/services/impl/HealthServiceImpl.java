@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -28,6 +29,7 @@ public class HealthServiceImpl implements HealthService {
     private final HealthRepository healthRepository;
     private final HealthMapper healthMapper;
     private final EntityManager entityManager;
+    public static final String STATUS = "status";
 
     public HealthServiceImpl(HealthRepository healthRepository, HealthMapper healthMapper, EntityManager entityManager) {
         this.healthRepository = healthRepository;
@@ -43,24 +45,17 @@ public class HealthServiceImpl implements HealthService {
         Root<HealthEntity> healthEntityRoot = criteriaQuery.from(HealthEntity.class);
 
         if (request.status() != null && !request.status().isBlank()) {
-            Predicate statusPredicate = criteriaBuilder.like(healthEntityRoot.get("status"), "%"
-                    + request.status() + "%");
+            Predicate statusPredicate = criteriaBuilder.like(healthEntityRoot.get(STATUS), "%" + request.status() + "%");
             predicates.add(statusPredicate);
-        } else if (request.updateDate() != null) {
-            Predicate updateDatePredicate = criteriaBuilder.equal(healthEntityRoot.get("updateDate"),
-                    request.updateDate());
-            predicates.add(updateDatePredicate);
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.and(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+
+        criteriaQuery.orderBy(criteriaBuilder.asc(healthEntityRoot.get(STATUS)));
 
         TypedQuery<HealthEntity> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(healthMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(healthMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -74,17 +69,13 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public HealthDto getHealthById(Long id) {
-        return healthRepository.findById(id)
-                .map(healthMapper::mapEntityToDto)
-                .orElseThrow(() -> new HealthNotFoundException(id));
+        return healthRepository.findById(id).map(healthMapper::mapEntityToDto).orElseThrow(() -> new HealthNotFoundException(id));
     }
 
     @Override
     public List<HealthDto> getAllHealths() {
-        List<HealthEntity> healthEntities = healthRepository.findAll();
-        return healthEntities.stream()
-                .map(healthMapper::mapEntityToDto)
-                .toList();
+        List<HealthEntity> healthEntities = healthRepository.findAll(Sort.by(Sort.Direction.ASC, STATUS));
+        return healthEntities.stream().map(healthMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -92,10 +83,9 @@ public class HealthServiceImpl implements HealthService {
     public HealthDto updateHealth(HealthDto healthDto, Long id) {
         HealthEntity healthEntity = healthMapper.mapDtoToEntity(healthDto);
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(healthDto.id());
-        if (optionalHealthEntity.isEmpty()) {
-            throw new HealthNotFoundException(id);
-        }
-        HealthEntity updatedHealthEntity = optionalHealthEntity.get();
+
+        HealthEntity updatedHealthEntity = optionalHealthEntity.orElseThrow(() -> new HealthNotFoundException(id));
+
         updatedHealthEntity.setStatus(healthEntity.getStatus());
         updatedHealthEntity.setUpdateDate(Date.valueOf(LocalDate.now()));
         updatedHealthEntity.setId(id);
@@ -106,9 +96,11 @@ public class HealthServiceImpl implements HealthService {
     @Transactional
     public void deleteHealth(Long id) {
         Optional<HealthEntity> optionalHealthEntity = healthRepository.findById(id);
+
         if (optionalHealthEntity.isEmpty()) {
             throw new HealthNotFoundException(id);
         }
+
         healthRepository.deleteById(id);
     }
 }

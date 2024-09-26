@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class CageServiceImpl implements CageService {
     private final CageRepository cageRepository;
     private final CageMapper cageMapper;
     private final EntityManager entityManager;
+    public static final String CAGE_NUMBER = "cageNumber";
 
     public CageServiceImpl(CageRepository cageRepository, CageMapper cageMapper, EntityManager entityManager) {
         this.cageRepository = cageRepository;
@@ -40,25 +42,21 @@ public class CageServiceImpl implements CageService {
         List<Predicate> predicates = new ArrayList<>();
         Root<CageEntity> root = criteriaQuery.from(CageEntity.class);
 
-        if (request.cageNumber() != null && !request.cageNumber().isBlank()) {
-            Predicate cagePredicate = criteriaBuilder.like(root.get("cageNumber"), "%"
-                    + request.cageNumber() + "%");
-            predicates.add(cagePredicate);
-        } else if (request.availability() != null && !request.availability().isBlank()) {
-            Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), "%"
-                    + request.availability() + "%");
-            predicates.add(availabilityPredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate cageNumberPredicate = criteriaBuilder.like(root.get(CAGE_NUMBER), query);
+            Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), query);
+
+            predicates.add(criteriaBuilder.or(cageNumberPredicate, availabilityPredicate));
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.or(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(CAGE_NUMBER)));
 
         TypedQuery<CageEntity> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(cageMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(cageMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -71,17 +69,13 @@ public class CageServiceImpl implements CageService {
 
     @Override
     public CageDto getCageById(Long id) {
-        return cageRepository.findById(id)
-                .map(cageMapper::mapEntityToDto)
-                .orElseThrow(() -> new CageNotFoundException(id));
+        return cageRepository.findById(id).map(cageMapper::mapEntityToDto).orElseThrow(() -> new CageNotFoundException(id));
     }
 
     @Override
     public List<CageDto> getAllCages() {
-        List<CageEntity> cageEntities = cageRepository.findAll();
-        return cageEntities.stream()
-                .map(cageMapper::mapEntityToDto)
-                .toList();
+        List<CageEntity> cageEntities = cageRepository.findAll(Sort.by(Sort.Direction.ASC, CAGE_NUMBER));
+        return cageEntities.stream().map(cageMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -89,10 +83,9 @@ public class CageServiceImpl implements CageService {
     public CageDto updateCage(CageDto cageDto, Long id) {
         CageEntity cageEntity = cageMapper.mapDtoToEntity(cageDto);
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(cageDto.id());
-        if (optionalCageEntity.isEmpty()) {
-            throw new CageNotFoundException(id);
-        }
-        CageEntity updatedCageEntity = optionalCageEntity.get();
+
+        CageEntity updatedCageEntity = optionalCageEntity.orElseThrow(() -> new CageNotFoundException(id));
+
         updatedCageEntity.setCageNumber(cageEntity.getCageNumber());
         updatedCageEntity.setAvailability(cageEntity.getAvailability());
         updatedCageEntity.setId(id);
@@ -103,9 +96,11 @@ public class CageServiceImpl implements CageService {
     @Transactional
     public void deleteCage(Long id) {
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(id);
+
         if (optionalCageEntity.isEmpty()) {
             throw new CageNotFoundException(id);
         }
+
         cageRepository.deleteById(id);
     }
 }

@@ -21,7 +21,7 @@ public class CageController {
         this.cageService = cageService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<CageDto>> searchCage(@RequestBody CageSearchRequest request) {
         List<CageDto> cageDtoList = cageService.findCageByCriteria(request);
         return ResponseEntity.ok(cageDtoList);
@@ -30,7 +30,7 @@ public class CageController {
     @PostMapping
     public ResponseEntity<String> createCage(@Valid @RequestBody CageDto cageDto) {
         cageService.createCage(cageDto);
-        return ResponseEntity.ok("Cage created");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping
@@ -47,12 +47,12 @@ public class CageController {
     public ResponseEntity<String> updateCage(@PathVariable("id") Long id,
                                              @Valid @RequestBody CageDto cageDto) {
         cageService.updateCage(cageDto, id);
-        return ResponseEntity.ok("Cage updated");
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteCage(@PathVariable("id") Long id) {
         cageService.deleteCage(id);
-        return ResponseEntity.ok("Cage deleted");
+        return ResponseEntity.ok("");
     }
 }

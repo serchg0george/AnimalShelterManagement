@@ -14,6 +14,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
+    public static final String EMAIL = "email";
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
@@ -40,33 +45,23 @@ public class UserServiceImpl implements UserService {
         List<Predicate> predicates = new ArrayList<>();
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-        if (request.email() != null && !request.email().isBlank()) {
-            Predicate emailPredicate = criteriaBuilder.like(root.get("email"), "%" + request.email() + "%");
-            predicates.add(emailPredicate);
-        } else if (request.firstName() != null && !request.firstName().isBlank()) {
-            Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), "%"
-                    + request.firstName() + "%");
-            predicates.add(firstNamePredicate);
-        } else if (request.lastName() != null && !request.lastName().isBlank()) {
-            Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), "%"
-                    + request.lastName() + "%");
-            predicates.add(lastNamePredicate);
-        } else if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
-            Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), "%"
-                    + request.phoneNumber() + "%");
-            predicates.add(phoneNumberPredicate);
+        if (request.query() != null && !request.query().isBlank()) {
+            String query = "%" + request.query() + "%";
+            Predicate emailPredicate = criteriaBuilder.like(root.get(EMAIL), query);
+            Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), query);
+            Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), query);
+            Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), query);
+
+            predicates.add(criteriaBuilder.or(emailPredicate, firstNamePredicate, lastNamePredicate, phoneNumberPredicate));
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.or(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(EMAIL)));
 
         TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
 
-
-        return query.getResultList().stream()
-                .map(userMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(userMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -79,17 +74,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::mapEntityToDto)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        return userRepository.findById(id).map(userMapper::mapEntityToDto).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities.stream()
-                .map(userMapper::mapEntityToDto)
-                .toList();
+    public List<UserDto> getAllUsers(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, EMAIL));
+        Page<UserEntity> userEntities = userRepository.findAll(pageable);
+        List<UserEntity> list = userEntities.getContent();
+        return list.stream().map(userMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -97,11 +90,9 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, Long id) {
         UserEntity userEntity = userMapper.mapDtoToEntity(userDto);
         Optional<UserEntity> optionalUserEntity = userRepository.findById(userDto.id());
-        if (optionalUserEntity.isEmpty()) {
-            throw new UserNotFoundException(id);
-        }
 
-        UserEntity updatedUserEntity = optionalUserEntity.get();
+        UserEntity updatedUserEntity = optionalUserEntity.orElseThrow(() -> new UserNotFoundException(id));
+
         updatedUserEntity.setFirstName(userEntity.getFirstName());
         updatedUserEntity.setLastName(userEntity.getLastName());
         updatedUserEntity.setEmail(userEntity.getEmail());
@@ -115,9 +106,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
+
         if (optionalUserEntity.isEmpty()) {
             throw new UserNotFoundException(id);
         }
+
         userRepository.deleteById(id);
     }
 }

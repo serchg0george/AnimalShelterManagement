@@ -51,11 +51,8 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     public UserAnimalDto updateUserAnimal(UserAnimalDto userAnimalDto, Long id) {
         UserAnimalEntity userAnimalEntity = userAnimalMapper.mapDtoToEntity(userAnimalDto);
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(userAnimalDto.id());
-        if (optionalUserAnimalEntity.isEmpty()) {
-            throw new UserAnimalNotFoundException(id);
-        }
 
-        UserAnimalEntity updatedUserAnimalEntity = optionalUserAnimalEntity.get();
+        UserAnimalEntity updatedUserAnimalEntity = optionalUserAnimalEntity.orElseThrow(() -> new UserAnimalNotFoundException(id));
         updatedUserAnimalEntity.setUsers(userAnimalEntity.getUsers());
         updatedUserAnimalEntity.setAnimals(userAnimalEntity.getAnimals());
         updatedUserAnimalEntity.setId(id);
@@ -66,9 +63,9 @@ public class UserAnimalServiceImpl implements UserAnimalService {
     @Transactional
     public void deleteUserAnimal(Long id) {
         Optional<UserAnimalEntity> optionalUserAnimalEntity = userAnimalRepository.findById(id);
-        if (optionalUserAnimalEntity.isEmpty()) {
-            throw new UserAnimalNotFoundException(id);
-        }
+
+        optionalUserAnimalEntity.orElseThrow(() -> new UserAnimalNotFoundException(id));
+
         userAnimalRepository.deleteById(id);
     }
 }
