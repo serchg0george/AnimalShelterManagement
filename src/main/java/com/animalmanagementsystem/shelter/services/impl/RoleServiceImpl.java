@@ -26,6 +26,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
     private final EntityManager entityManager;
+    public static final String NAME = "name";
 
     public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, EntityManager entityManager) {
         this.roleRepository = roleRepository;
@@ -42,13 +43,15 @@ public class RoleServiceImpl implements RoleService {
 
         if (request.query() != null && !request.query().isBlank()) {
             String query = "%" + request.query() + "%";
-            Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), query);
+            Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get(NAME), query);
             Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), query);
 
             predicates.add(criteriaBuilder.or(namePredicate, descriptionPredicate));
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        criteriaQuery.orderBy(criteriaBuilder.asc(roleEntityRoot.get(NAME)));
 
         TypedQuery<RoleEntity> query = entityManager.createQuery(criteriaQuery);
 
@@ -93,7 +96,9 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long id) {
         Optional<RoleEntity> optionalRoleEntity = roleRepository.findById(id);
 
-        optionalRoleEntity.orElseThrow(() -> new RoleNotFoundException(id));
+        if (optionalRoleEntity.isEmpty()) {
+            throw new RoleNotFoundException(id);
+        }
 
         roleRepository.deleteById(id);
     }

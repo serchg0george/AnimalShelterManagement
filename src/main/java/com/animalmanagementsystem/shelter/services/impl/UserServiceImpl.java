@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
+    public static final String EMAIL = "email";
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         if (request.query() != null && !request.query().isBlank()) {
             String query = "%" + request.query() + "%";
-            Predicate emailPredicate = criteriaBuilder.like(root.get("email"), query);
+            Predicate emailPredicate = criteriaBuilder.like(root.get(EMAIL), query);
             Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), query);
             Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), query);
             Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), query);
@@ -56,8 +57,9 @@ public class UserServiceImpl implements UserService {
 
         criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
-        TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(EMAIL)));
 
+        TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
 
         return query.getResultList().stream().map(userMapper::mapEntityToDto).toList();
     }
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "email"));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, EMAIL));
         Page<UserEntity> userEntities = userRepository.findAll(pageable);
         List<UserEntity> list = userEntities.getContent();
         return list.stream().map(userMapper::mapEntityToDto).toList();
