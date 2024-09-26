@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -73,7 +74,7 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public List<HealthDto> getAllHealths() {
-        List<HealthEntity> healthEntities = healthRepository.findAll();
+        List<HealthEntity> healthEntities = healthRepository.findAll(Sort.by(Sort.Direction.ASC, STATUS));
         return healthEntities.stream().map(healthMapper::mapEntityToDto).toList();
     }
 

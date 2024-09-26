@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<AnimalDto> getAllAnimals() {
-        List<AnimalEntity> animalEntities = animalRepository.findAll();
+        List<AnimalEntity> animalEntities = animalRepository.findAll(Sort.by(Sort.Direction.ASC, NAME));
         return animalEntities.stream().map(animalMapper::mapEntityToDto).toList();
     }
 

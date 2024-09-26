@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class CageServiceImpl implements CageService {
 
     @Override
     public List<CageDto> getAllCages() {
-        List<CageEntity> cageEntities = cageRepository.findAll();
+        List<CageEntity> cageEntities = cageRepository.findAll(Sort.by(Sort.Direction.ASC, CAGE_NUMBER));
         return cageEntities.stream().map(cageMapper::mapEntityToDto).toList();
     }
 

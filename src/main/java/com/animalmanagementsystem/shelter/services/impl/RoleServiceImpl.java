@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> getAllRoles() {
-        List<RoleEntity> roleEntities = roleRepository.findAll();
+        List<RoleEntity> roleEntities = roleRepository.findAll(Sort.by(Sort.Direction.ASC, NAME));
         return roleEntities.stream().map(roleMapper::mapEntityToDto).toList();
     }
 
