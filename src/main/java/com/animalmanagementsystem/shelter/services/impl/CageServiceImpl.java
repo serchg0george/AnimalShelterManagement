@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class CageServiceImpl implements CageService {
     private final CageRepository cageRepository;
     private final CageMapper cageMapper;
     private final EntityManager entityManager;
+    public static final String CAGE_NUMBER = "cageNumber";
 
     public CageServiceImpl(CageRepository cageRepository, CageMapper cageMapper, EntityManager entityManager) {
         this.cageRepository = cageRepository;
@@ -42,13 +44,15 @@ public class CageServiceImpl implements CageService {
 
         if (request.query() != null && !request.query().isBlank()) {
             String query = "%" + request.query() + "%";
-            Predicate cageNumberPredicate = criteriaBuilder.like(root.get("cageNumber"), query);
+            Predicate cageNumberPredicate = criteriaBuilder.like(root.get(CAGE_NUMBER), query);
             Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), query);
 
             predicates.add(criteriaBuilder.or(cageNumberPredicate, availabilityPredicate));
         }
 
         criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(CAGE_NUMBER)));
 
         TypedQuery<CageEntity> query = entityManager.createQuery(criteriaQuery);
 
@@ -70,7 +74,7 @@ public class CageServiceImpl implements CageService {
 
     @Override
     public List<CageDto> getAllCages() {
-        List<CageEntity> cageEntities = cageRepository.findAll();
+        List<CageEntity> cageEntities = cageRepository.findAll(Sort.by(Sort.Direction.ASC, CAGE_NUMBER));
         return cageEntities.stream().map(cageMapper::mapEntityToDto).toList();
     }
 
@@ -93,7 +97,9 @@ public class CageServiceImpl implements CageService {
     public void deleteCage(Long id) {
         Optional<CageEntity> optionalCageEntity = cageRepository.findById(id);
 
-        optionalCageEntity.orElseThrow(() -> new CageNotFoundException(id));
+        if (optionalCageEntity.isEmpty()) {
+            throw new CageNotFoundException(id);
+        }
 
         cageRepository.deleteById(id);
     }

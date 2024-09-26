@@ -14,6 +14,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
+    public static final String EMAIL = "email";
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         if (request.query() != null && !request.query().isBlank()) {
             String query = "%" + request.query() + "%";
-            Predicate emailPredicate = criteriaBuilder.like(root.get("email"), query);
+            Predicate emailPredicate = criteriaBuilder.like(root.get(EMAIL), query);
             Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), query);
             Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), query);
             Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), query);
@@ -52,8 +57,9 @@ public class UserServiceImpl implements UserService {
 
         criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
-        TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(EMAIL)));
 
+        TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
 
         return query.getResultList().stream().map(userMapper::mapEntityToDto).toList();
     }
@@ -72,9 +78,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities.stream().map(userMapper::mapEntityToDto).toList();
+    public List<UserDto> getAllUsers(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, EMAIL));
+        Page<UserEntity> userEntities = userRepository.findAll(pageable);
+        List<UserEntity> list = userEntities.getContent();
+        return list.stream().map(userMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -99,7 +107,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
 
-        optionalUserEntity.orElseThrow(() -> new UserNotFoundException(id));
+        if (optionalUserEntity.isEmpty()) {
+            throw new UserNotFoundException(id);
+        }
 
         userRepository.deleteById(id);
     }
