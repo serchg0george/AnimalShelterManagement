@@ -47,24 +47,15 @@ public class UserServiceImpl implements UserService {
             Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), query);
             Predicate phoneNumberPredicate = criteriaBuilder.like(root.get("phoneNumber"), query);
 
-            predicates.add(
-                    criteriaBuilder.or(
-                            emailPredicate,
-                            firstNamePredicate,
-                            lastNamePredicate,
-                            phoneNumberPredicate));
+            predicates.add(criteriaBuilder.or(emailPredicate, firstNamePredicate, lastNamePredicate, phoneNumberPredicate));
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.or(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
         TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
 
 
-        return query.getResultList().stream()
-                .map(userMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(userMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -77,17 +68,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::mapEntityToDto)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        return userRepository.findById(id).map(userMapper::mapEntityToDto).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities.stream()
-                .map(userMapper::mapEntityToDto)
-                .toList();
+        return userEntities.stream().map(userMapper::mapEntityToDto).toList();
     }
 
     @Override

@@ -45,22 +45,14 @@ public class RoleServiceImpl implements RoleService {
             Predicate namePredicate = criteriaBuilder.like(roleEntityRoot.get("name"), query);
             Predicate descriptionPredicate = criteriaBuilder.like(roleEntityRoot.get("description"), query);
 
-            predicates.add(
-                    criteriaBuilder.or(
-                            namePredicate,
-                            descriptionPredicate
-                    ));
+            predicates.add(criteriaBuilder.or(namePredicate, descriptionPredicate));
         }
 
-        criteriaQuery.where(
-                predicates.toArray(new Predicate[0])
-        );
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<RoleEntity> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(roleMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(roleMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -73,17 +65,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto getRoleById(Long id) {
-        return roleRepository.findById(id)
-                .map(roleMapper::mapEntityToDto)
-                .orElseThrow(() -> new RoleNotFoundException(id));
+        return roleRepository.findById(id).map(roleMapper::mapEntityToDto).orElseThrow(() -> new RoleNotFoundException(id));
     }
 
     @Override
     public List<RoleDto> getAllRoles() {
         List<RoleEntity> roleEntities = roleRepository.findAll();
-        return roleEntities.stream()
-                .map(roleMapper::mapEntityToDto)
-                .toList();
+        return roleEntities.stream().map(roleMapper::mapEntityToDto).toList();
     }
 
     @Override

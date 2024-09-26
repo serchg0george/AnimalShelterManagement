@@ -45,10 +45,7 @@ public class AnimalServiceImpl implements AnimalService {
             Predicate namePredicate = criteriaBuilder.like(root.get("name"), query);
             Predicate speciesPredicate = criteriaBuilder.like(root.get("species"), query);
 
-            predicates.add(
-                    criteriaBuilder.or(
-                            namePredicate,
-                            speciesPredicate));
+            predicates.add(criteriaBuilder.or(namePredicate, speciesPredicate));
         }
 
         criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
@@ -67,8 +64,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public AnimalDto getAnimalById(Long id) {
-        return animalRepository.findById(id).map(animalMapper::mapEntityToDto)
-                .orElseThrow(() -> new AnimalNotFoundException(id));
+        return animalRepository.findById(id).map(animalMapper::mapEntityToDto).orElseThrow(() -> new AnimalNotFoundException(id));
     }
 
     @Override

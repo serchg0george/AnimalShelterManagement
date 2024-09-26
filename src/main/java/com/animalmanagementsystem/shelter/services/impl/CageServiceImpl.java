@@ -45,22 +45,14 @@ public class CageServiceImpl implements CageService {
             Predicate cageNumberPredicate = criteriaBuilder.like(root.get("cageNumber"), query);
             Predicate availabilityPredicate = criteriaBuilder.like(root.get("availability"), query);
 
-            predicates.add(
-                    criteriaBuilder.or(
-                            cageNumberPredicate,
-                            availabilityPredicate
-                    ));
+            predicates.add(criteriaBuilder.or(cageNumberPredicate, availabilityPredicate));
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.or(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
         TypedQuery<CageEntity> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(cageMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(cageMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -73,17 +65,13 @@ public class CageServiceImpl implements CageService {
 
     @Override
     public CageDto getCageById(Long id) {
-        return cageRepository.findById(id)
-                .map(cageMapper::mapEntityToDto)
-                .orElseThrow(() -> new CageNotFoundException(id));
+        return cageRepository.findById(id).map(cageMapper::mapEntityToDto).orElseThrow(() -> new CageNotFoundException(id));
     }
 
     @Override
     public List<CageDto> getAllCages() {
         List<CageEntity> cageEntities = cageRepository.findAll();
-        return cageEntities.stream()
-                .map(cageMapper::mapEntityToDto)
-                .toList();
+        return cageEntities.stream().map(cageMapper::mapEntityToDto).toList();
     }
 
     @Override

@@ -43,20 +43,15 @@ public class HealthServiceImpl implements HealthService {
         Root<HealthEntity> healthEntityRoot = criteriaQuery.from(HealthEntity.class);
 
         if (request.status() != null && !request.status().isBlank()) {
-            Predicate statusPredicate = criteriaBuilder.like(healthEntityRoot.get("status"), "%"
-                    + request.status() + "%");
+            Predicate statusPredicate = criteriaBuilder.like(healthEntityRoot.get("status"), "%" + request.status() + "%");
             predicates.add(statusPredicate);
         }
 
-        criteriaQuery.where(
-                criteriaBuilder.and(predicates.toArray(new Predicate[0]))
-        );
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
         TypedQuery<HealthEntity> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(healthMapper::mapEntityToDto)
-                .toList();
+        return query.getResultList().stream().map(healthMapper::mapEntityToDto).toList();
     }
 
     @Override
@@ -70,17 +65,13 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public HealthDto getHealthById(Long id) {
-        return healthRepository.findById(id)
-                .map(healthMapper::mapEntityToDto)
-                .orElseThrow(() -> new HealthNotFoundException(id));
+        return healthRepository.findById(id).map(healthMapper::mapEntityToDto).orElseThrow(() -> new HealthNotFoundException(id));
     }
 
     @Override
     public List<HealthDto> getAllHealths() {
         List<HealthEntity> healthEntities = healthRepository.findAll();
-        return healthEntities.stream()
-                .map(healthMapper::mapEntityToDto)
-                .toList();
+        return healthEntities.stream().map(healthMapper::mapEntityToDto).toList();
     }
 
     @Override
