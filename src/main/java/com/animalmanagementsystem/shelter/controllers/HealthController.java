@@ -33,8 +33,11 @@ public class HealthController {
     }
 
     @GetMapping
-    public ResponseEntity<List<HealthDto>> getAllHealth() {
-        return new ResponseEntity<>(healthService.getAllHealths(), HttpStatus.OK);
+    public ResponseEntity<List<HealthDto>> getAllHealth(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(healthService.getAllHealths(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

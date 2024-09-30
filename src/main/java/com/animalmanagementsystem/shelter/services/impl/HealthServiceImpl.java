@@ -14,6 +14,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +76,11 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public List<HealthDto> getAllHealths() {
-        List<HealthEntity> healthEntities = healthRepository.findAll(Sort.by(Sort.Direction.ASC, STATUS));
-        return healthEntities.stream().map(healthMapper::mapEntityToDto).toList();
+    public List<HealthDto> getAllHealths(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, STATUS));
+        Page<HealthEntity> healthEntities = healthRepository.findAll(pageable);
+        List<HealthEntity> list = healthEntities.getContent();
+        return list.stream().map(healthMapper::mapEntityToDto).toList();
     }
 
     @Override

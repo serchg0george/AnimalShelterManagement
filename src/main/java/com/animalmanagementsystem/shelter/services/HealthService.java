@@ -10,7 +10,7 @@ public interface HealthService {
 
     HealthDto getHealthById(Long id);
 
-    List<HealthDto> getAllHealths();
+    List<HealthDto> getAllHealths(int pageNo, int pageSize);
 
     HealthDto updateHealth(HealthDto healthDto, Long id);
 
