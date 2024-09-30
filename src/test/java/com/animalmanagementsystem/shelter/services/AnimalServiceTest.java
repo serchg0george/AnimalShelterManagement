@@ -17,9 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -88,19 +86,6 @@ class AnimalServiceTest {
         });
 
         assertEquals("Animal with id 1 not found.", exception.getMessage());
-    }
-
-    @Test
-    void testGetAllAnimals() {
-        List<AnimalEntity> animalEntities = Arrays.asList(animalEntity);
-        when(animalRepository.findAll()).thenReturn(animalEntities);
-        when(animalMapper.mapEntityToDto(animalEntity)).thenReturn(animalDto);
-
-        List<AnimalDto> result = animalService.getAllAnimals();
-
-        assertEquals(1, result.size());
-        assertEquals(animalDto, result.get(0));
-        verify(animalRepository).findAll();
     }
 
     @Test

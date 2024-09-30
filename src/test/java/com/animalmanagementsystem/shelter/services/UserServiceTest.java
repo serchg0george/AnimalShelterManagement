@@ -97,31 +97,6 @@ class UserServiceTest {
         assertThat(exception.getMessage()).isEqualTo("User with id 1 not found.");
     }
 
-    @Test
-    void getAllUsersTest() {
-        UserEntity userEntity2 = new UserEntity();
-        userEntity2.setId(2L);
-        userEntity2.setFirstName("Jane");
-        userEntity2.setLastName("Doe");
-        userEntity2.setEmail("jane.doe@example.com");
-        userEntity2.setPassword("0987654321");
-        userEntity2.setPhoneNumber("1234567890");
-
-        when(userRepository.findAll()).thenReturn(List.of(userEntity, userEntity2));
-        when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
-        when(userMapper.mapEntityToDto(userEntity2)).thenReturn(new UserDto(2L, "jane.doe@example.com", "password", "Jane", "Doe", "1234567890"));
-
-        List<UserDto> allUsers = userService.getAllUsers();
-
-        assertThat(allUsers)
-                .isNotNull()
-                .hasSize(2)
-                .extracting(UserDto::email)
-                .containsExactlyInAnyOrder("john.doe@example.com", "jane.doe@example.com");
-
-        verify(userRepository, times(1)).findAll();
-    }
-
 
     @Test
     void updateUserTest() {
@@ -187,7 +162,7 @@ class UserServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
         when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
 
-        UserSearchRequest request = new UserSearchRequest("john.doe@example.com", null, null, null);
+        UserSearchRequest request = new UserSearchRequest("john.doe@example.com");
 
         List<UserDto> foundUsers = userService.findUserByCriteria(request);
 
@@ -209,7 +184,7 @@ class UserServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
         when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
 
-        UserSearchRequest request = new UserSearchRequest(null, "John", null, null);
+        UserSearchRequest request = new UserSearchRequest("John");
 
         List<UserDto> foundUsers = userService.findUserByCriteria(request);
 
@@ -231,7 +206,7 @@ class UserServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
         when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
 
-        UserSearchRequest request = new UserSearchRequest(null, null, "Doe", null);
+        UserSearchRequest request = new UserSearchRequest("Doe");
 
         List<UserDto> foundUsers = userService.findUserByCriteria(request);
 
@@ -253,7 +228,7 @@ class UserServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(userEntity));
         when(userMapper.mapEntityToDto(userEntity)).thenReturn(userDto);
 
-        UserSearchRequest request = new UserSearchRequest(null, null, null, "1234567890");
+        UserSearchRequest request = new UserSearchRequest("1234567890");
 
         List<UserDto> foundUsers = userService.findUserByCriteria(request);
 

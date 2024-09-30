@@ -87,19 +87,6 @@ class CageServiceTest {
     }
 
     @Test
-    void testGetAllCages() {
-        List<CageEntity> cageEntities = List.of(cageEntity);
-        when(cageRepository.findAll()).thenReturn(cageEntities);
-        when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
-
-        List<CageDto> cageDtos = cageService.getAllCages();
-
-        assertNotNull(cageDtos);
-        assertEquals(1, cageDtos.size());
-        verify(cageRepository, times(1)).findAll();
-    }
-
-    @Test
     void testUpdateCage_CageExists() {
         when(cageRepository.findById(1L)).thenReturn(Optional.of(cageEntity));
         when(cageMapper.mapDtoToEntity(any(CageDto.class))).thenReturn(cageEntity);
@@ -151,7 +138,7 @@ class CageServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(cageEntity));
         when(cageMapper.mapEntityToDto(any(CageEntity.class))).thenReturn(cageDto);
 
-        CageSearchRequest request = new CageSearchRequest("Cage-1", null);
+        CageSearchRequest request = new CageSearchRequest("Cage-1");
         List<CageDto> foundCages = cageService.findCageByCriteria(request);
 
         assertNotNull(foundCages);

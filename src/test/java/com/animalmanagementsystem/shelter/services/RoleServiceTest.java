@@ -94,26 +94,6 @@ class RoleServiceTest {
     }
 
     @Test
-    void getAllRolesTest() {
-        RoleEntity roleEntity2 = new RoleEntity();
-        roleEntity2.setId(2L);
-        roleEntity2.setName("Manager");
-        roleEntity2.setDescription("Manager role");
-
-        when(roleRepository.findAll()).thenReturn(List.of(roleEntity, roleEntity2));
-        when(roleMapper.mapEntityToDto(any(RoleEntity.class))).thenReturn(roleDto, new RoleDto(2L, "Manager", "Manager role"));
-
-        List<RoleDto> allRoles = roleService.getAllRoles();
-
-        assertThat(allRoles)
-                .isNotNull()
-                .hasSize(2)
-                .extracting(RoleDto::name)
-                .contains("Admin", "Manager");
-        verify(roleRepository, times(1)).findAll();
-    }
-
-    @Test
     void updateRoleTest() {
         when(roleRepository.findById(1L)).thenReturn(Optional.of(roleEntity));
         when(roleMapper.mapDtoToEntity(any(RoleDto.class))).thenReturn(roleEntity);
@@ -176,7 +156,7 @@ class RoleServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(roleEntity));
         when(roleMapper.mapEntityToDto(roleEntity)).thenReturn(roleDto);
 
-        RoleSearchRequest request = new RoleSearchRequest("Admin", null);
+        RoleSearchRequest request = new RoleSearchRequest("Admin");
 
         List<RoleDto> foundRoles = roleService.findRoleByCriteria(request);
 
@@ -198,7 +178,7 @@ class RoleServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(roleEntity));
         when(roleMapper.mapEntityToDto(roleEntity)).thenReturn(roleDto);
 
-        RoleSearchRequest request = new RoleSearchRequest(null, "Administrator role");
+        RoleSearchRequest request = new RoleSearchRequest("Administrator role");
 
         List<RoleDto> foundRoles = roleService.findRoleByCriteria(request);
 

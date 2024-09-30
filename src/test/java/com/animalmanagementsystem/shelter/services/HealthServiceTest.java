@@ -88,18 +88,6 @@ class HealthServiceTest {
         assertThrows(HealthNotFoundException.class, () -> healthService.getHealthById(1L));
     }
 
-    @Test
-    void testGetAllHealths() {
-        List<HealthEntity> healthEntities = List.of(healthEntity);
-        when(healthRepository.findAll()).thenReturn(healthEntities);
-        when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
-
-        List<HealthDto> healthDtos = healthService.getAllHealths();
-
-        assertNotNull(healthDtos);
-        assertEquals(1, healthDtos.size());
-        verify(healthRepository, times(1)).findAll();
-    }
 
     @Test
     void testUpdateHealth_HealthExists() {
@@ -153,7 +141,7 @@ class HealthServiceTest {
         when(typedQuery.getResultList()).thenReturn(List.of(healthEntity));
         when(healthMapper.mapEntityToDto(any(HealthEntity.class))).thenReturn(healthDto);
 
-        HealthSearchRequest request = new HealthSearchRequest("Healthy", Date.valueOf(LocalDate.now()));
+        HealthSearchRequest request = new HealthSearchRequest("Healthy");
         List<HealthDto> foundHealths = healthService.findHealthByCriteria(request);
 
         assertNotNull(foundHealths);
