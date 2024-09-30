@@ -14,6 +14,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +76,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDto> getAllRoles() {
-        List<RoleEntity> roleEntities = roleRepository.findAll(Sort.by(Sort.Direction.ASC, NAME));
-        return roleEntities.stream().map(roleMapper::mapEntityToDto).toList();
+    public List<RoleDto> getAllRoles(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, NAME));
+        Page<RoleEntity> roleEntities = roleRepository.findAll(pageable);
+        List<RoleEntity> list = roleEntities.getContent();
+        return list.stream().map(roleMapper::mapEntityToDto).toList();
     }
 
     @Override
