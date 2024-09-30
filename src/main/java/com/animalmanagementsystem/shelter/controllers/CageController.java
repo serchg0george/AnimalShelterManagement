@@ -34,8 +34,11 @@ public class CageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CageDto>> getAllCages() {
-        return new ResponseEntity<>(cageService.getAllCages(), HttpStatus.OK);
+    public ResponseEntity<List<CageDto>> getAllCages(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(cageService.getAllCages(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

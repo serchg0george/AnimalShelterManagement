@@ -10,7 +10,7 @@ public interface CageService {
 
     CageDto getCageById(Long id);
 
-    List<CageDto> getAllCages();
+    List<CageDto> getAllCages(int pageNo, int pageSize);
 
     CageDto updateCage(CageDto cageDto, Long id);
 

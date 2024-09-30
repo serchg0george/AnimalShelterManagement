@@ -14,6 +14,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +76,11 @@ public class CageServiceImpl implements CageService {
     }
 
     @Override
-    public List<CageDto> getAllCages() {
-        List<CageEntity> cageEntities = cageRepository.findAll(Sort.by(Sort.Direction.ASC, CAGE_NUMBER));
-        return cageEntities.stream().map(cageMapper::mapEntityToDto).toList();
+    public List<CageDto> getAllCages(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.Direction.ASC, CAGE_NUMBER);
+        Page<CageEntity> cageEntities = cageRepository.findAll(pageable);
+        List<CageEntity> list = cageEntities.getContent();
+        return list.stream().map(cageMapper::mapEntityToDto).toList();
     }
 
     @Override
