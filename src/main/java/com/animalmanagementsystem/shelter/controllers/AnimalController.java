@@ -34,8 +34,11 @@ public class AnimalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AnimalDto>> getAllAnimals() {
-        return new ResponseEntity<>(animalService.getAllAnimals(), HttpStatus.OK);
+    public ResponseEntity<List<AnimalDto>> getAllAnimals(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(animalService.getAllAnimals(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

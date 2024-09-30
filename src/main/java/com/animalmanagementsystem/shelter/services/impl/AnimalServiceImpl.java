@@ -14,6 +14,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +76,11 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<AnimalDto> getAllAnimals() {
-        List<AnimalEntity> animalEntities = animalRepository.findAll(Sort.by(Sort.Direction.ASC, NAME));
-        return animalEntities.stream().map(animalMapper::mapEntityToDto).toList();
+    public List<AnimalDto> getAllAnimals(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, NAME));
+        Page<AnimalEntity> animalEntities = animalRepository.findAll(pageable);
+        List<AnimalEntity> list = animalEntities.getContent();
+        return list.stream().map(animalMapper::mapEntityToDto).toList();
     }
 
     @Override

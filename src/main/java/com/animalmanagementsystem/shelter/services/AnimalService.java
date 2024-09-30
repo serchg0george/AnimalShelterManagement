@@ -10,7 +10,7 @@ public interface AnimalService {
 
     AnimalDto getAnimalById(Long id);
 
-    List<AnimalDto> getAllAnimals();
+    List<AnimalDto> getAllAnimals(int pageNo, int pageSize);
 
     AnimalDto updateAnimal(AnimalDto animalDto, Long id);
 
